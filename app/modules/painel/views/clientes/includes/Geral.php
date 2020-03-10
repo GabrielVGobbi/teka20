@@ -9,15 +9,13 @@
     <div class="tab-content" id="vert-tabs-tabContent">
 
       <div class="tab-pane text-left fade active show" id="permissoes" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
-       <form method="POST" id="permissions_client" action="<?php echo BASE_URL_PAINEL; ?>clientes/actionPermissions">
-        <input type="hidden" class="form-control" name="id_cliente" id="id_cliente" autocomplete="off" value="<?php echo $tableInfo['id_client']; ?>">
 
         <div class="card">
           <div class="card-header ui-sortable-handle">
             <h3 class="card-title">
               <i class="ion ion-clipboard mr-1"></i>
               Permissões
-            </h3> 
+            </h3>
           </div>
           <div class="card-body">
             <ul class="todo-list ui-sortable" data-widget="todo-list">
@@ -32,16 +30,11 @@
               <?php endforeach; ?>
             </ul>
           </div>
-          <div class="box-footer clearfix no-border">
-            <div id="submit_permission" style="float: right;" class="btn btn-primary pull-right mb-3 mr-3">Salvar</div>
-          </div>
-        </form>
-      </div> 
-    </div>
+        </div>
+      </div>
 
-    <div class="tab-pane fade" id="pagamento" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
-    </div>
+      <div class="tab-pane fade" id="pagamento" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
+      </div>
 
+    </div>
   </div>
-</div>
-</div>

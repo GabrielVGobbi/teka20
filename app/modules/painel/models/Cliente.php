@@ -32,7 +32,7 @@ class Cliente extends model
 	public function getInfo($id_cliente, $id_company)
 	{
 		$sql = $this->db->prepare("SELECT * FROM client cli 
-			INNER JOIN cliente_endereco clie ON (clie.id_endereco = cli.id_address)
+			INNER JOIN client_endereco clie ON (clie.id_endereco = cli.id_address)
 			INNER JOIN users user ON (user.id_cliente = cli.id_client)
 			INNER JOIN entrevista ent ON (ent.id_entrevista = cli.id_entrevista)
 
@@ -48,6 +48,9 @@ class Cliente extends model
 			$this->array = $sql->fetch();
 			$this->permissions->setGroup($this->array['id_client'], $id_company, true);
 			$this->array['permissions'] = $this->permissions->returnPermission();
+			
+			$this->array['silhueta'] = $this->getSilhuetaClient($this->array['id_client'], $id_company);
+			
 		}
 
 		return $this->array;
@@ -71,6 +74,22 @@ class Cliente extends model
 
 		return $this->array;
 	}
+	public function getSilhuetaClient($id_client, $id_company){
+		
+		$Asilhueta = array();
+		
+		$sql = $this->db->prepare("SELECT * FROM client_silhueta WHERE id_company = :id_company AND id_client = :id_client LIMIT 1");
+		$sql->bindValue(":id_company", $id_company);
+		$sql->bindValue(":id_client", $id_client);
+
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$Asilhueta = $sql->fetch();
+		}
+
+		return $Asilhueta;
+	}
 
 	public function getEntrevista($id_company)
 	{
@@ -89,9 +108,15 @@ class Cliente extends model
 	public function add($Parametros, $id_company, $file)
 	{
 
+		//Endereço
+		$id_endereco   = $this->setEnderecoCliente($Parametros, $id_company);
 
-		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company);
+		//Entrevista
 		$id_entrevista = $this->setEntrevistaCliente(array(), $id_company);
+
+		//Silhueta
+		$id_silhueta = $this->setSilhuetaCliente($Parametros, $id_company);
+
 
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
@@ -115,6 +140,7 @@ class Cliente extends model
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
 				id_entrevista = :id_entrevista,
+				id_silhueta = :id_silhueta,
 				
 				created_at		= NOW(),
 				id_company 		= :id_company
@@ -130,6 +156,8 @@ class Cliente extends model
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
 			$sql->bindValue(":id_entrevista", $id_entrevista);
+			$sql->bindValue(":id_silhueta", $id_silhueta);
+
 
 			$sql->bindValue(":params", $params);
 
@@ -150,6 +178,7 @@ class Cliente extends model
 				}
 
 				$this->addPermissions($id_cliente, $id_company);
+				
 
 				#controller::setLog($Parametros, 'cliente', 'add');
 
@@ -173,11 +202,19 @@ class Cliente extends model
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
 
-		$id_cliente = $Parametros['id'];
+		$Parametros['silhueta']   = isset($Parametros['silhueta']) ? $Parametros['silhueta'] : false;
 
+		$id_cliente = $Parametros['id_client'];
+
+		//Endereço
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
 
+		//Entrevista
 		$id_entrevista = $this->setEntrevistaCliente($Parametros['entrevista'], $id_company, $Parametros['id_entrevista']);
+
+		//Silhueta
+		if($Parametros['silhueta'])
+			$id_silhueta = $this->setSilhuetaCliente($Parametros['silhueta'], $id_company, $Parametros['id_silhueta']);
 
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
@@ -293,13 +330,40 @@ class Cliente extends model
 		return $id_entrevista;
 	}
 
+	public function setSilhuetaCliente($Parametros, $id_company, $id_silhueta = false)
+	{
+
+		if ($id_silhueta == false) {
+ 
+			$sql = $this->db->prepare("INSERT INTO client_silhueta SET 
+				
+				id_company = :id_company
+				
+			
+			");
+			$sql->bindValue(":id_company", $id_company);
+			$sql->execute();
+
+			$id_silhueta = $this->db->lastInsertId();
+
+		} else {
+			
+			if(!empty($id_silhueta))
+				$p = new Painel();
+				$Parametros['type'] = 'id_silhueta';
+				$p->editPainel($Parametros, 'client_silhueta', $id_company, false, $id_silhueta);
+		}
+
+		return $id_silhueta;
+	}
+
 
 	public function setEnderecoCliente($Parametros, $id_company, $id_endereco = false)
 	{
 
 		if ($id_endereco == false && !empty($Parametros['cep'])) {
 
-			$sql = $this->db->prepare("INSERT INTO cliente_endereco SET 
+			$sql = $this->db->prepare("INSERT INTO client_endereco SET 
 				
 				cep = :cep,
 				rua = :rua, 
@@ -324,7 +388,7 @@ class Cliente extends model
 			$id_endereco = $this->db->lastInsertId();
 		} else {
 
-			$sql = $this->db->prepare("UPDATE `cliente_endereco` SET  
+			$sql = $this->db->prepare("UPDATE `client_endereco` SET  
 				
 				cep = :cep,
 				rua = :rua, 

@@ -24,6 +24,8 @@ class ClientesController extends controller
         $this->permissions = new Permissions();
         $this->email = new Email();
 
+
+
         $this->dataInfo = array(
             'pageController' => 'clientes',
             'nome_tabela'   => 'cliente',
@@ -68,7 +70,7 @@ class ClientesController extends controller
 
         if (isset($_POST['cli_nome']) && $_POST['cli_nome'] != '') {
 
-            if (!isset($_POST['id'])) {
+            if (!isset($_POST['id_client'])) {
 
                 $id_cliente = $this->cliente->add($_POST, $this->user->getCompany(), $_FILES);
 
@@ -80,11 +82,14 @@ class ClientesController extends controller
                 header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
 
                 exit();
+                
             } else {
 
                 $this->cliente->edit($_POST, $this->user->getCompany(), $_FILES, $this->user->getId());
+                
+                $this->cliente->editPermissions($_POST['permissions'], $this->user->getCompany(), $_POST['id_client']);
 
-                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id']);
+                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id_client']);
 
                 exit();
             }
@@ -105,6 +110,10 @@ class ClientesController extends controller
             $this->dataInfo['imagem'] =  $this->cliente->getFotosByPasta($id_cliente, $this->id_company);
 
             $this->dataInfo['titlePage']  = 'Cliente';
+
+            //excluir
+            $this->dataInfo['silhueta'] = $this->painel->getCamposSilhueta();
+
 
             if (!empty($this->dataInfo['tableInfo'])) {
                 $this->loadView($this->dataInfo['pageController'] . "/editar", $this->dataInfo);
@@ -128,19 +137,6 @@ class ClientesController extends controller
         } else {
 
             $this->loadViewErrorNotPermission();
-        }
-    }
-
-    public function actionPermissions()
-    {
-
-        if (isset($_POST['id_cliente']) && $_POST['id_cliente'] != '') {
-
-            $this->cliente->editPermissions($_POST['permissions'], $this->user->getCompany(), $_POST['id_cliente']);
-
-            header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id_cliente']);
-
-            exit();
         }
     }
 
