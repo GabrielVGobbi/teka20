@@ -62,6 +62,7 @@ class Model
      */
     public function update($columns, $where = array(), $where_cond = 'AND')
     {
+    
         if (!empty($this->table) && count($columns) > 0) {
             $update = array();
             foreach ($columns as $key => $value) {

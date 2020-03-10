@@ -1,5 +1,4 @@
-
-<?php 
+<?php
 $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']);
 $idade = 0;
 if ($tableInfo['cli_aniversario'] != '') {
@@ -18,71 +17,93 @@ if ($tableInfo['cli_aniversario'] != '') {
 }
 ?>
 
+<form method="POST" id="edit_client" action="<?php echo BASE_URL_PAINEL; ?>clientes/action" enctype="multipart/form-data">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header p-2">
+				<ul class="nav nav-pills">
+					<li class="nav-item"><a class="nav-link active" href="#dados" data-toggle="tab">Dados</a></li>
+					<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
+					<?php $permissions = array();
+					foreach ($tableInfo['permissions'] as $perm => $value) : ?>
+						<li class="nav-item"><a class="nav-link" href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+					<?php endforeach; ?>
+				</ul>
 
-<div class="col-md-12">
-	<div class="card">
-		<div class="card-header p-2">
-			<ul class="nav nav-pills">
-				<li class="nav-item"><a class="nav-link active" href="#dados" data-toggle="tab">Dados</a></li>
-				<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
-				<?php $permissions = array();
-				foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-					<li class="nav-item"><a class="nav-link" href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
-				<?php endforeach; ?>
-			</ul>
+			</div>
+			<div class="card-body">
+				<div class="tab-content">
 
-		</div>
-		<div class="card-body">
-			<div class="tab-content">
-				<div class="tab-pane active" id="dados">
-					<div class="row"> 
-						<div class="col-md-3">
-							<div class="card-body box-profile">
-								<div class="text-center">
-									<img class="profile-user-img img-fluid img-circle" src="https://adminlte.io/themes/dev/AdminLTE/dist/img/user4-128x128.jpg" alt="User profile picture">
+
+					<div class="tab-pane active" id="dados">
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="card-body box-profile">
+									<div class="text-center">
+										<img class="profile-user-img img-fluid img-circle" src="https://adminlte.io/themes/dev/AdminLTE/dist/img/user4-128x128.jpg" alt="User profile picture">
+									</div>
+
+									<h3 class="profile-username text-center"><?php echo $tableInfo['cli_nome']; ?></h3>
+
+									<p class="text-muted text-center"><?php echo $tableInfo['cli_profissao']; ?></p>
+
+									<ul class="list-group list-group-unbordered mb-3">
+										<li class="list-group-item">
+											<b>Status</b>
+											<a class="float-right">
+												<div class="custom-control custom-switch custom-switch-off-success custom-switch-on-danger">
+													<input type="checkbox" class="custom-control-input" id="customStatus">
+													<label class="custom-control-label" for="customStatus"></label>
+												</div>
+											</a>
+										</li>
+
+										<li class="list-group-item">
+											<b>Consultoria</b>
+											<a class="float-right">
+												<div class="custom-control custom-switch custom-switch-off-success custom-switch-on-danger">
+													<input type="checkbox" class="custom-control-input" id="customConsultoria">
+													<label class="custom-control-label" for="customConsultoria"></label>
+												</div>
+											</a>
+										</li>
+
+										<li class="list-group-item">
+											<b>Tipo</b>
+											<a class="float-right">
+												<span> Possivel cliente </span>
+											</a>
+										</li>
+
+									</ul>
+
 								</div>
 
-								<h3 class="profile-username text-center">Nina Mcintire</h3>
+								<div class="card card">
+									<div class="card-header">
+										<h3 class="card-title">Próximos Encontros</h3>
+									</div>
+									<div class="card-body">
 
-								<p class="text-muted text-center">Software Engineer</p>
-
-								<ul class="list-group list-group-unbordered mb-3">
-									<li class="list-group-item">
-										<b>Status</b> 
-										<a class="float-right">
-											<div class="custom-control custom-switch custom-switch-off-success custom-switch-on-danger">
-												<input type="checkbox" class="custom-control-input" id="customSwitch3">
-												<label class="custom-control-label" for="customSwitch3"></label>
-											</div>
-										</a>
-									</li>
-
-								</ul>
-
+									</div>
+								</div>
 							</div>
+							<div class="col-md-9">
+								<input type="hidden" id="id_client" name="id_client" value="<?php echo $tableInfo['id_client']; ?>" />
+								<input type="hidden" id="end" name="end" value="<?php echo $tableInfo['id_endereco']; ?>" />
+								<input type="hidden" id="id_silhueta" name="id_silhueta" value="<?php echo $tableInfo['id_silhueta']; ?>" />
+								<input type="hidden" id="id_entrevista" name="id_entrevista" value="<?php echo $tableInfo['id_entrevista']; ?>" />
 
-							<div class="card card">
-								<div class="card-header">
-									<h3 class="card-title">Próximos Encontros</h3>
-								</div>
 								<div class="card-body">
-									
-								</div>
-							</div>
-						</div>
-						<div class="col-md-9">
-							<form method="POST" id="edit_client" action="<?php echo BASE_URL_PAINEL; ?>clientes/action" enctype="multipart/form-data">
-								<input type="hidden" id="id" name="id" value="<?php echo $tableInfo['id_client']; ?>" />
-								<div class="card-body">
-
-									<div class="row"> 
+									<div class="row">
 										<div class="col-md-6">
 											<label for="">Nome</label>
 											<div class="input-group mb-3">
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="far fa-user"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_nome" id="cli_nome"  value="<?php echo $tableInfo['cli_nome'];?>">
+												<input type="text" class="form-control" name="cli_nome" id="cli_nome" value="<?php echo $tableInfo['cli_nome']; ?>">
 											</div>
 										</div>
 
@@ -93,27 +114,36 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-user-edit"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_sobrenome" id="cli_sobrenome" value="<?php echo $tableInfo['cli_sobrenome'];?>">
+												<input type="text" class="form-control" name="cli_sobrenome" id="cli_sobrenome" value="<?php echo $tableInfo['cli_sobrenome']; ?>">
 											</div>
 										</div>
 
-										<div class="col-md-12">
+										<div class="col-md-9">
 											<label for="">E-mail</label>
 											<div class="input-group mb-3">
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="far fa-envelope"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_email" id="cli_email" value="<?php echo $tableInfo['cli_email'];?>">
+												<input type="text" class="form-control" name="cli_email" id="cli_email" value="<?php echo $tableInfo['cli_email']; ?>">
 											</div>
 										</div>
 
+										<div class="col-md-3">
+											<label for="">Profissão</label>
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+												</div>
+												<input type="text" class="form-control" name="cli_profissao" id="cli_profissao" value="<?php echo $tableInfo['cli_profissao']; ?>">
+											</div>
+										</div>
 										<div class="col-md-3">
 											<label for="">Data Nascimento</label>
 											<div class="input-group mb-3">
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario'];?>">
+												<input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario']; ?>">
 											</div>
 										</div>
 
@@ -123,27 +153,27 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
 												</div>
-												<input type="text" class="form-control" name="" id="" value="<?php echo $idade;?>">
+												<input type="text" class="form-control" name="" id="" value="<?php echo $idade; ?>">
 											</div>
 										</div>
 
 										<div class="col-md-3">
-											<label for="">Telefone</label>
+											<label for="">Tel Fixo</label>
 											<div class="input-group mb-3">
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone'];?>">
+												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>">
 											</div>
 										</div>
 
-										<div class="col-md-4">
-											<label for="">Profissão</label>
+										<div class="col-md-3">
+											<label for="">Tel Celular</label>
 											<div class="input-group mb-3">
 												<div class="input-group-prepend">
-													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+													<span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_profissao" id="cli_profissao" value="<?php echo $tableInfo['cli_profissao'];?>">
+												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>">
 											</div>
 										</div>
 									</div>
@@ -158,27 +188,38 @@ if ($tableInfo['cli_aniversario'] != '') {
 														<label for="">Cep</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="cep" id="cep" value="<?php echo $tableInfo['cep'];?>">
+															<input type="text" class="form-control" name="cep" id="cep" value="<?php echo $tableInfo['cep']; ?>">
 														</div>
 													</div>
-													<div class="col-md-6">
+													<div class="col-md-10">
 														<label for="">Rua</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="rua" id="rua" value="<?php echo $tableInfo['rua'];?>">
+															<input type="text" class="form-control" name="rua" id="rua" value="<?php echo $tableInfo['rua']; ?>">
 														</div>
 													</div>
+
 													<div class="col-md-4">
 														<label for="">Bairro</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="bairro" id="bairro" value="<?php echo $tableInfo['bairro'];?>">
+															<input type="text" class="form-control" name="bairro" id="bairro" value="<?php echo $tableInfo['bairro']; ?>">
+														</div>
+													</div>
+
+													<div class="col-md-8">
+														<label for="">Cidade</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+
+															</div>
+															<input type="text" class="form-control" name="cidade" id="cidade" value="<?php echo $tableInfo['cidade']; ?>">
 														</div>
 													</div>
 
@@ -186,21 +227,19 @@ if ($tableInfo['cli_aniversario'] != '') {
 														<label for="">Estado</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $tableInfo['estado'];?>">
+															<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $tableInfo['estado']; ?>">
 														</div>
 													</div>
-
-													
 
 													<div class="col-md-2">
 														<label for="">Nº</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="numero" id="numero" value="<?php echo $tableInfo['numero'];?>">
+															<input type="text" class="form-control" name="numero" id="numero" value="<?php echo $tableInfo['numero']; ?>">
 														</div>
 													</div>
 
@@ -208,9 +247,9 @@ if ($tableInfo['cli_aniversario'] != '') {
 														<label for="">Complemento</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
-																
+
 															</div>
-															<input type="text" class="form-control" name="complemento" id="complemento" value="<?php echo $tableInfo['complemento'];?>">
+															<input type="text" class="form-control" name="complemento" id="complemento" value="<?php echo $tableInfo['complemento']; ?>">
 														</div>
 													</div>
 												</div>
@@ -218,52 +257,55 @@ if ($tableInfo['cli_aniversario'] != '') {
 										</div>
 									</div>
 								</div>
-								<div>
-									<div class="">
-										<div id="submit_edit" style="float: right;" class="btn btn-primary left">Salvar</div>
+
+
+							</div>
+						</div>
+
+					</div>
+
+
+
+					<div class="tab-pane" id="entrevista">
+						<div class="row">
+							<?php
+							$array = json_decode($tableInfo['perguntas']);
+							foreach ($array as $pergunta => $reposta) :
+							?>
+								<div class="col-md-12 mb-3">
+									<label style="font-weight: 700;" for="<?php echo $pergunta; ?>"><?php echo $pergunta; ?></label>
+									<textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $pergunta; ?>]" id="<?php echo $pergunta; ?>" placeholder="Resposta: "><?php echo $reposta; ?></textarea>
+									<div class="invalid-feedback">
+
 									</div>
 								</div>
-							</form>
+							<?php endforeach; ?>
 						</div>
-					</div>
-				</div>
-
-
-				<div class="tab-pane" id="entrevista">
-					<div class="row">
-						<?php
-						$array = json_decode($tableInfo['perguntas']);
-						foreach ($array as $pergunta => $reposta) :
-							?>
-							<div class="col-md-12 mb-3">
-								<label style="font-weight: 700;" for="<?php echo $pergunta; ?>"><?php echo $pergunta; ?></label>
-								<textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $pergunta; ?>]" id="<?php echo $pergunta; ?>" placeholder="Resposta: "><?php echo $reposta; ?></textarea>
-								<div class="invalid-feedback">
-
-								</div>
-							</div>
-						<?php endforeach; ?>
-					</div>
-				</div>
-
-				<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-					<div class="tab-pane <?php #echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' 
-					?>" id="<?php echo str_replace(' ', '', $value); ?>">
-					<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
-				</div>
-			<?php endforeach; ?>
-
-		</div>
-	</div>
+</form>
 </div>
 
+<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
+	<div class="tab-pane <?php #echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' 
+							?>" id="<?php echo str_replace(' ', '', $value); ?>">
+		<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
+	</div>
+<?php endforeach; ?>
+
+</div>
+</div>
+<div class="">
+	<div id="" style="float: right;" class="btn btn-primary left submit_edit">Salvar</div>
+</div>
+</div>
+</div>
+</form>
 <script>
 	$(function() {
 		$("#submit_permission").click(function() {
 			$("#permissions_client").submit();
 		});
 
-		$("#submit_edit").click(function() {
+		$(".submit_edit").click(function() {
 			$("#edit_client").submit();
 		});
 	});
