@@ -102,6 +102,7 @@ class ClientesController extends controller
             //$this->dataInfo['entrevista']       = $this->cliente->getEntrevista($this->id_company);
             $this->dataInfo['permissons_all']   = $this->permissions->getlistCliente($this->id_company);
 
+            $this->dataInfo['imagem'] =  $this->cliente->getFotosByPasta($id_cliente, $this->id_company);
 
             $this->dataInfo['titlePage']  = 'Cliente';
 

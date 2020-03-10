@@ -618,19 +618,18 @@ class Cliente extends model
 		}
 		return $array;
 	}
-	public function getFotosByPasta($id_cliente, $pasta, $id_company)
+	public function getFotosByPasta($id_cliente, $id_company)
 	{
 
 		$array = array();
 		$sql = $this->db->prepare("
 			SELECT * FROM client_image cliImg
 				INNER JOIN images img ON (img.id_image = cliImg.id_image)
-			WHERE cliImg.id_company = :id_company AND cliImg.id_client = :id_cliente AND cliImg.img_type = :pasta
+			WHERE cliImg.id_company = :id_company AND cliImg.id_client = :id_cliente 
 		");
 
 		$sql->bindValue(':id_cliente', $id_cliente);
 		$sql->bindValue(':id_company', $id_company);
-		$sql->bindValue(':pasta', $pasta);
 
 		$sql->execute();
 

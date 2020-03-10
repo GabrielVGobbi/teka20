@@ -21,8 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `soare416_style`
 --
-CREATE DATABASE IF NOT EXISTS `soare416_style` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `soare416_style`;
+CREATE DATABASE IF NOT EXISTS `teka` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `teka`;
 
 -- --------------------------------------------------------
 

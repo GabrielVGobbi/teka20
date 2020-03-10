@@ -84,6 +84,7 @@ class ajaxController extends controller
         $id_company = $u->getCompany();
 
         $arrayFotos = $c->getFotosByPasta($id_cliente, $typePasta, $id_company);
+        
         $qntFoto = 0;
         if (isset($arrayFotos) && !empty($arrayFotos)) {
             $qntFoto = count($arrayFotos);

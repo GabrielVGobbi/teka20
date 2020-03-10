@@ -58,36 +58,38 @@
 			<?php if ($tableDados && count($tableDados) > 0) : ?>
 				<?php foreach ($tableDados as $dd) : ?>
 					<?php $nomecliente = str_replace(' ', '_', $dd['cli_nome']) . '_' . str_replace(' ', '_', $dd['cli_sobrenome']);  ?>
-					<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
-						<div class="card bg-light">
-							<div class="card-header text-muted border-bottom-0"></div>
-							<div class="card-body pt-0">
-								<div class="row">
-									<div class="col-7">
-										<h2 class="lead"><b><?php echo ucfirst($dd['cli_nome']) . ' ' . ucfirst($dd['cli_sobrenome']); ?></b></h2>
-										<p class="text-muted text-sm"><b>About: </b> blá blá blá </p>
-										<ul class="ml-4 mb-0 fa-ul text-muted">
-											<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <?php echo $dd['cli_nome'] ?></li>
-											<li class="small pt-2"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <?php echo $dd['cli_telefone'] ?></li>
-										</ul>
-									</div>
-									<div class="col-5 text-center">
-										<img src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($dd['id_client'], 'UTF-8') ?>/<?php echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>" alt="" class="img-circle img-fluid">
+					<a href="<?php echo BASE_URL_PAINEL ?>clientes/info/<?php echo $dd['id_client']; ?>">
+						<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+							<div class="card bg-light">
+								<div class="card-header text-muted border-bottom-0"></div>
+								<div class="card-body pt-0">
+									<div class="row">
+										<div class="col-7">
+											<h2 class="lead"><b><?php echo ucfirst($dd['cli_nome']) . ' ' . ucfirst($dd['cli_sobrenome']); ?></b></h2>
+											<p class="text-muted text-sm"><b>About: </b> blá blá blá </p>
+											<ul class="ml-4 mb-0 fa-ul text-muted">
+												<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <?php echo $dd['cli_nome'] ?></li>
+												<li class="small pt-2"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <?php echo $dd['cli_telefone'] ?></li>
+											</ul>
+										</div>
+										<div class="col-5 text-center">
+											<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($dd['id_client'], 'UTF-8') ?>/<?php echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>" alt="User profile picture">
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="card-footer">
-								<div class="text-left">
-									<a href="#" class="btn btn-sm bg-teal">
-										<i class="fas fa-comments"></i>
-									</a>
-									<a href="#" class="btn btn-sm btn-primary">
-										<i class="fas fa-user"></i> 
-									</a>
+								<div class="card-footer">
+									<div class="text-left">
+										<a href="#" class="btn btn-sm bg-teal">
+											<i class="fas fa-comments"></i>
+										</a>
+										<a href="#" class="btn btn-sm btn-primary">
+											<i class="fas fa-user"></i> 
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</a>
 				<?php endforeach; ?>
 
 			<?php else : ?>
