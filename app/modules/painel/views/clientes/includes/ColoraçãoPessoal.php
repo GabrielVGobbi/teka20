@@ -124,7 +124,7 @@ $comentario = $this->getComentarioByEtapaById(TESTEDECOLORACAOPESSOAL, $tableInf
                     </div>
                 </div>
                 <div class="text-center">
-                    <img style="width: 51%" src="<?php echo (isset($cartela_imagem) && !empty($cartela_imagem)  ? $cartela_imagem : 'https://www.joinvillevagas.com.br/wp-content/uploads/2018/10/sem-foto.gif'); ?>">
+                    <img style="width: 51%" src="<?php echo (isset($cartela_imagem) && !empty($cartela_imagem)  ? BASE_URL.$cartela_imagem : 'https://www.joinvillevagas.com.br/wp-content/uploads/2018/10/sem-foto.gif'); ?>">
                 </div>
             </div>
         </div>

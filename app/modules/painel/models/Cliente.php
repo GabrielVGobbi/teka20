@@ -49,7 +49,7 @@ class Cliente extends model
 			$this->permissions->setGroup($this->array['id_client'], $id_company, true);
 			$this->array['permissions'] = $this->permissions->returnPermission();
 			
-			$this->array['silhueta'] = $this->getSilhuetaClient($this->array['id_client'], $id_company);
+			$this->array['silhueta'] = $this->getSilhuetaClient($this->array['id_silhueta'], $id_company);
 			
 		}
 
@@ -74,13 +74,13 @@ class Cliente extends model
 
 		return $this->array;
 	}
-	public function getSilhuetaClient($id_client, $id_company){
+	public function getSilhuetaClient($id_silhueta, $id_company){
 		
 		$Asilhueta = array();
 		
-		$sql = $this->db->prepare("SELECT * FROM client_silhueta WHERE id_company = :id_company AND id_client = :id_client LIMIT 1");
+		$sql = $this->db->prepare("SELECT * FROM client_silhueta WHERE id_company = :id_company AND id_silhueta = :id_silhueta LIMIT 1");
 		$sql->bindValue(":id_company", $id_company);
-		$sql->bindValue(":id_client", $id_client);
+		$sql->bindValue(":id_silhueta", $id_silhueta);
 
 		$sql->execute();
 
@@ -125,6 +125,8 @@ class Cliente extends model
 		$cli_aniversario = isset($Parametros['cli_aniversario']) ? ($Parametros['cli_aniversario'])  : '';
 		$cli_email 		 = isset($Parametros['cli_email']) ? (mb_strtolower($Parametros['cli_email'], "UTF-8"))  : '';
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
+		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
+
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
@@ -135,6 +137,8 @@ class Cliente extends model
 				cli_sobrenome 	= :cli_sobrenome,
 				cli_aniversario = :cli_aniversario,
 				cli_telefone 	= :cli_telefone,
+				cli_telefone_celular 	= :cli_telefone_celular,
+
 				cli_profissao 	= :cli_profissao,
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
@@ -150,7 +154,9 @@ class Cliente extends model
 			$sql->bindValue(":cli_nome", ucfirst($cli_nome));
 			$sql->bindValue(":cli_sobrenome", ucfirst($cli_sobrenome));
 			$sql->bindValue(":cli_aniversario", $cli_aniversario);
+			$sql->bindValue(":cli_telefone_celular", $cli_telefone_celular);
 			$sql->bindValue(":cli_telefone", $cli_telefone);
+
 			$sql->bindValue(":cli_profissao", ucfirst($cli_profissao));
 			$sql->bindValue(":cli_email", $cli_email);
 			$sql->bindValue(":id_endereco", $id_endereco);
@@ -223,6 +229,8 @@ class Cliente extends model
 		$cli_aniversario = isset($Parametros['cli_aniversario']) ? ($Parametros['cli_aniversario'])  : '';
 		$cli_email 		 = isset($Parametros['cli_email']) ? (mb_strtolower($Parametros['cli_email'], "UTF-8"))  : '';
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
+		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
+
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
@@ -233,6 +241,8 @@ class Cliente extends model
 				cli_sobrenome 	= :cli_sobrenome,
 				cli_aniversario = :cli_aniversario,
 				cli_telefone 	= :cli_telefone,
+				cli_telefone_celular 	= :cli_telefone_celular,
+
 				cli_profissao 	= :cli_profissao,
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
@@ -248,7 +258,9 @@ class Cliente extends model
 			$sql->bindValue(":cli_nome", ucfirst($cli_nome));
 			$sql->bindValue(":cli_sobrenome", ucfirst($cli_sobrenome));
 			$sql->bindValue(":cli_aniversario", $cli_aniversario);
+			$sql->bindValue(":cli_telefone_celular", $cli_telefone_celular);
 			$sql->bindValue(":cli_telefone", $cli_telefone);
+
 			$sql->bindValue(":cli_profissao", ucfirst($cli_profissao));
 			$sql->bindValue(":cli_email", $cli_email);
 			$sql->bindValue(":id_endereco", $id_endereco);
@@ -338,8 +350,7 @@ class Cliente extends model
 			$sql = $this->db->prepare("INSERT INTO client_silhueta SET 
 				
 				id_company = :id_company
-				
-			
+
 			");
 			$sql->bindValue(":id_company", $id_company);
 			$sql->execute();

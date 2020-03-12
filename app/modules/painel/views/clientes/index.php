@@ -73,7 +73,7 @@
 											</ul>
 										</div>
 										<div class="col-5 text-center">
-											<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($dd['id_client'], 'UTF-8') ?>/<?php echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>" alt="User profile picture">
+											<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php #echo BASE_URL ?><?php #echo mb_strtolower($dd['id_client'], 'UTF-8') ?><?php #echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>https://adminlte.io/themes/dev/AdminLTE/dist/img/user4-128x128.jpg" alt="User profile picture">
 										</div>
 									</div>
 								</div>
@@ -99,20 +99,11 @@
 
 		</div>
 	</div>
-	<!-- /.card-body -->
 	<div class="card-footer">
 		<nav aria-label="Contacts Page Navigation">
 			<ul class="pagination justify-content-center m-0">
 				<li class="page-item active"><a class="page-link" href="#">1</a></li>
-				<li class="page-item"><a class="page-link" href="#">2</a></li>
-				<li class="page-item"><a class="page-link" href="#">3</a></li>
-				<li class="page-item"><a class="page-link" href="#">4</a></li>
-				<li class="page-item"><a class="page-link" href="#">5</a></li>
-				<li class="page-item"><a class="page-link" href="#">6</a></li>
-				<li class="page-item"><a class="page-link" href="#">7</a></li>
-				<li class="page-item"><a class="page-link" href="#">8</a></li>
 			</ul>
 		</nav>
 	</div>
-	<!-- /.card-footer -->
 </div>
