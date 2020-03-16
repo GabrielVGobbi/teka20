@@ -142,7 +142,7 @@
       <section class="content-header">
         <div class="container">
           <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-12 text-center">
               <h1> <?php echo ucfirst($titlePage); ?> </h1>
             </div>
           <!--<div class="col-sm-6">

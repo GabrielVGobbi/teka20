@@ -222,6 +222,8 @@ class Cliente extends model
 		if($Parametros['silhueta'])
 			$id_silhueta = $this->setSilhuetaCliente($Parametros['silhueta'], $id_company, $Parametros['id_silhueta']);
 
+		$this->editColoracaoByClient($id_cliente, $id_company, $Parametros);
+
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
 		$cli_profissao 	 = isset($Parametros['cli_profissao']) ? controller::ReturnValor($Parametros['cli_profissao'])  : '';
