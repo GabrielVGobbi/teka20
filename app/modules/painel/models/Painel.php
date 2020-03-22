@@ -10,73 +10,70 @@ class Painel extends model
     }
 
     public function dataTable()
-    { 
-
-
-
+    {
     }
 
     public function getEtapas($type = false)
-    { 
+    {
 
         $type = $type == false ? '' : 'WHERE etp_type = 2';
 
         $sql = $this->db->prepare("SELECT * FROM etapas {$type}");
-		$sql->execute();
+        $sql->execute();
 
-		if($sql->rowCount() > 0 ) {
-			$this->retorno = $sql->fetchAll();
+        if ($sql->rowCount() > 0) {
+            $this->retorno = $sql->fetchAll();
         }
-        
-        return $this->retorno;
 
+        return $this->retorno;
     }
 
-    public function getEtapaById($id_company, $Parametros){
+    public function getEtapaById($id_company, $Parametros)
+    {
 
         $params = implode(',', $Parametros['id_etapa']);
 
         $sql = $this->db->prepare("SELECT * FROM etapas WHERE id_etapa IN ({$params}) AND id_company = :id_company AND etp_type = 2");
         $sql->bindValue(':id_company', $id_company);
-		$sql->execute();
+        $sql->execute();
 
-		if($sql->rowCount() > 0 ) {
-			$this->retorno = $sql->fetchAll();
+        if ($sql->rowCount() > 0) {
+            $this->retorno = $sql->fetchAll();
         }
-        
-        return $this->retorno;
 
+        return $this->retorno;
     }
 
-    public function getperguntas($id_company){
+    public function getperguntas($id_company)
+    {
 
-        $sql = $this->db->prepare("SELECT * FROM client_perguntas WHERE id_company = :id_company ORDER BY cli_ordem");
+        $sql = $this->db->prepare("SELECT id_cli_pe as id_pergunta,clip_pergunta FROM client_perguntas WHERE id_company = :id_company ORDER BY cli_ordem");
         $sql->bindValue(':id_company', $id_company);
-		$sql->execute();
+        $sql->execute();
 
-		if($sql->rowCount() > 0 ) {
-			$this->retorno = $sql->fetchAll();
+        if ($sql->rowCount() > 0) {
+            $this->retorno = $sql->fetchAll();
         }
 
         #error_log(print_r($this->retorno,1));
-        
+
         return $this->retorno;
-
     }
-    public function getFoto($id_cliente, $foto){
+    public function getFoto($id_cliente, $foto)
+    {
 
-       return BASE_URL.'app/assets/images/clientes/'.mb_strtolower($id_cliente, 'UTF-8').'/'.mb_strtolower($foto, 'UTF-8');
-
+        return BASE_URL . 'app/assets/images/clientes/' . mb_strtolower($id_cliente, 'UTF-8') . '/' . mb_strtolower($foto, 'UTF-8');
     }
 
     //excluir
-    public function getCamposSilhueta(){
-        
-        $sql = $this->db->prepare("SELECT * FROM client_silhueta");
-		$sql->execute();
+    public function getCamposSilhueta()
+    {
 
-		if($sql->rowCount() > 0 ) {
-			$this->retorno = $sql->fetch();
+        $sql = $this->db->prepare("SELECT * FROM client_silhueta");
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $this->retorno = $sql->fetch();
         }
 
         return $this->retorno;
@@ -86,43 +83,56 @@ class Painel extends model
     {
         $certo = true;
         $first = false;
-        
+
         $arr['id'] = $WhereId;
 
-        if($WhereId)
+        if ($WhereId)
             $query = "UPDATE `$nome_tabela` SET ";
-            foreach ($arr as $key => $value) {
-                $nome = $key;
-                $valor = $value;
+        foreach ($arr as $key => $value) {
+            $nome = $key;
+            $valor = $value;
 
-                if ($nome == 'acao' || $nome == 'nome_tabela' || $nome == 'id' || $value == '' || $nome == 'type')
-                    continue;
+            if ($nome == 'acao' || $nome == 'nome_tabela' || $nome == 'id' || $value == '' || $nome == 'type')
+                continue;
 
 
-                if ($first == false) {
-                    $first = true;
-                    $query .= "$nome=?";
-                } else {
-                    $query .= ",$nome=?";
-                }
-
-                $parametros[] = $value;
-
+            if ($first == false) {
+                $first = true;
+                $query .= "$nome=?";
+            } else {
+                $query .= ",$nome=?";
             }
 
-            if ($certo == true) {
-                if ($single == false) {
-                    $parametros[] = $arr['id'];
-                    $sql = $this->db->prepare($query . ' WHERE '.$arr['type'].'=?');
-                    $sql->execute($parametros);
+            $parametros[] = $value;
+        }
 
-                } else {
-                    $sql = $this->db->prepare($query);
-                    $sql->execute($parametros);
-
-                }
+        if ($certo == true) {
+            if ($single == false) {
+                $parametros[] = $arr['id'];
+                $sql = $this->db->prepare($query . ' WHERE ' . $arr['type'] . '=?');
+                $sql->execute($parametros);
+            } else {
+                $sql = $this->db->prepare($query);
+                $sql->execute($parametros);
             }
-            return $WhereId;
+        }
+        return $WhereId;
     }
 
+    public function addCartela($Parametros, $id_company, $Foto)
+    {
+        $Parametros += [
+            'id_company' => $id_company
+        ];
+
+        $this->table = 'cartela';
+
+        $id_cartela = $this->insert($Parametros, $id_company);
+
+
+        if (!empty($id_cartela)) {
+            $c = new Cliente();
+            $c->AddPhotoCartela($id_cartela, $Foto, $id_company);
+        }
+    }
 }

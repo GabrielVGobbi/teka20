@@ -1,264 +1,282 @@
-<!-- <!doctype html>
-<html lang="en">
+<?php $perguntas = $this->cliente->getEntrevista($tableInfo['id_company'], $tableInfo['id_client']); ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.6">
-    <title>Checkout example · Bootstrap</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/checkout/">
 
-    <link href="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
-    <link href="form-validation.css" rel="stylesheet">
-</head>
-
-<body class="bg-light">
-    <div class="container">
-        <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h2>Checkout form</h2>
-            <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-header left" style="float:right;padding:10px;display:none">
+            <button type="button" onclick="modoEdit(this)" data-id="modoEdit" class="btn btn-box-tool left"><i class="fa fa-plus-circle"></i> Modo Edição</button>
         </div>
-
-        <div class="row">
-            <div class="col-md-4 order-md-2 mb-4">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Your cart</span>
-                    <span class="badge badge-secondary badge-pill">3</span>
-                </h4>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">Product name</h6>
-                            <small class="text-muted">Brief description</small>
-                        </div>
-                        <span class="text-muted">$12</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">Second product</h6>
-                            <small class="text-muted">Brief description</small>
-                        </div>
-                        <span class="text-muted">$8</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">Third item</h6>
-                            <small class="text-muted">Brief description</small>
-                        </div>
-                        <span class="text-muted">$5</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                        <div class="text-success">
-                            <h6 class="my-0">Promo code</h6>
-                            <small>EXAMPLECODE</small>
-                        </div>
-                        <span class="text-success">-$5</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Total (USD)</span>
-                        <strong>$20</strong>
-                    </li>
-                </ul>
-
-                <form class="card p-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Promo code">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary">Redeem</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-8 order-md-1">
-                <h4 class="mb-3">Billing address</h4>
-                <form class="needs-validation" novalidate>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="firstName">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastName">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid last name is required.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="username">Username</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">@</span>
-                            </div>
-                            <input type="text" class="form-control" id="username" placeholder="Username" required>
-                            <div class="invalid-feedback" style="width: 100%;">
-                                Your username is required.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                        <input type="email" class="form-control" id="email" placeholder="you@example.com">
-                        <div class="invalid-feedback">
-                            Please enter a valid email address for shipping updates.
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address">Address</label>
-                        <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
-                        <div class="invalid-feedback">
-                            Please enter your shipping address.
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-                        <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-5 mb-3">
-                            <label for="country">Country</label>
-                            <select class="custom-select d-block w-100" id="country" required>
-                                <option value="">Choose...</option>
-                                <option>United States</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please select a valid country.
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="state">State</label>
-                            <select class="custom-select d-block w-100" id="state" required>
-                                <option value="">Choose...</option>
-                                <option>California</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please provide a valid state.
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="zip">Zip</label>
-                            <input type="text" class="form-control" id="zip" placeholder="" required>
-                            <div class="invalid-feedback">
-                                Zip code required.
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="mb-4">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="same-address">
-                        <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="save-info">
-                        <label class="custom-control-label" for="save-info">Save this information for next time</label>
-                    </div>
-                    <hr class="mb-4">
-
-                    <h4 class="mb-3">Payment</h4>
-
-                    <div class="d-block my-3">
-                        <div class="custom-control custom-radio">
-                            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                            <label class="custom-control-label" for="credit">Credit card</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
-                            <label class="custom-control-label" for="debit">Debit card</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-                            <label class="custom-control-label" for="paypal">PayPal</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="cc-name">Name on card</label>
-                            <input type="text" class="form-control" id="cc-name" placeholder="" required>
-                            <small class="text-muted">Full name as displayed on card</small>
-                            <div class="invalid-feedback">
-                                Name on card is required
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="cc-number">Credit card number</label>
-                            <input type="text" class="form-control" id="cc-number" placeholder="" required>
-                            <div class="invalid-feedback">
-                                Credit card number is required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label for="cc-expiration">Expiration</label>
-                            <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
-                            <div class="invalid-feedback">
-                                Expiration date required
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="cc-cvv">CVV</label>
-                            <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
-                            <div class="invalid-feedback">
-                                Security code required
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-                </form>
-            </div>
-        </div>
-
-        <footer class="my-5 pt-5 text-muted text-center text-small">
-            <p class="mb-1">&copy; 2017-2019 Company Name</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Privacy</a></li>
-                <li class="list-inline-item"><a href="#">Terms</a></li>
-                <li class="list-inline-item"><a href="#">Support</a></li>
-            </ul>
-        </footer>
     </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script>
-        window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>');
-    </script>
-    <script src="/docs/4.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
-    <script src="form-validation.js"></script>
+    <div id="perguntas" style="display:">
+        <?php foreach ($perguntas as $per) : ?>
+            <div class="col-md-12 mb-3">
+                <label style="font-weight: 700;" for="<?php echo $per['clip_pergunta']; ?>"><?php echo $per['clip_pergunta']; ?></label>
+                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta: "><?php echo $per['resposta']; ?></textarea>
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-</body>
-</html>
+    <div class="col-md-12" id="modoEditPage" style="display:none">
+        <div class="card">
+            <div class="card-header ui-sortable-handle">
+                <h3 class="card-title">
+                    <i class="ion ion-clipboard mr-1"></i>
+                    Modo edição
+                </h3>
+                <div class="card-tools">
+                    <ul class="pagination pagination-sm">
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="todo-list ui-sortable" id="listPergunta" data-widget="todo-list">
+                </ul>
+            </div>
+            <div class="card-footer clearfix">
+                <button type="button" onclick="addPergunta()" class="btn btn-info float-right"><i class="fas fa-plus"></i> add</button>
+            </div>
+        </div>
+    </div>
+</div>
 
--->
-oi
 
 
+<div class="modal fade bd-example-modal-lg" id="" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title fc-center" align="center"></h2>
+
+            </div>
+            <form id="form_update_pergunta" method="POST" class="form-horizontal">
+                <div class="modal-body form">
+
+                    <input type="hidden" value="" name="id_entrevista" />
+
+                    <div class="box box-default box-solid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Dados</h3>
+                                </div>
+                                <div class="box-body" style="">
+
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <label for="">Pergunta</label>
+                                            <input class="form-control" name="clip_pergunta" value="" placeholder="">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <a type="button" data-toggle="tooltip" title="" data-original-title="Duplicar" class="btn btn-warning pull-right" id="duplicar">Duplicar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<form id="form_update_pergunta" method="POST" class="form-horizontal">
+    <div class="modal fade" id="modal_form" aria-modal="true" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Large Modal</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                <input type="hidden" class="form-control" name="id_cli_pe" id="id_cli_pe" value="">
+
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <label for="">Pergunta</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+
+                            </div>
+                            <input type="text" class="form-control" name="clip_pergunta" id="clip_pergunta" value="" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div id="buttonSavePergunta" class="btn btn-primary">Salvar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $(document).ready(function() {
+
+        $("#buttonSavePergunta").on('click', function() {
+            var clip_pergunta = $("#clip_pergunta").val();
+            var id_cli_pe = $("#id_cli_pe").val();
+
+            if ($('#clip_pergunta').val() != '') {
+
+                $.ajax({
+                    url: BASE_URL_PAINEL + 'ajax/actionPergunta/',
+                    data: {
+                        id_cli_pe: id_cli_pe,
+                        clip_pergunta: clip_pergunta,
+                        id_client: '<?php echo $tableInfo['id_client']; ?>',
+                    },
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function(data) {
+                        data ? toastr.success('salvo com successo') : toastr.error('Erro contate o administrador');
+                        $('#modal_form').modal('hide');
+
+                        getPerguntas();
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        toastr.error('Erro contate o administrador CODADDETAPACONX1');
+                    },
+                });
+            } else {
+                $("#clip_pergunta").addClass('is-invalid');
+                toastr.error('campo não pode ser vazio')
+            }
+        })
+        $(function() {
+            $(".ui-sortable").sortable({
+                update: function() {
+                    var ordem_atual = $(this).sortable("toArray");
+                    $.post(BASE_URL + "ajax/attOrdemEtapaSerCon", {
+                        itens: ordem_atual
+                    }, function(retorno) {
+                        retorno ? toastr.success('ordenado com sucesso!') : toastr.error('deu erro, me chama');
+
+                    });
+                }
+            });
+        });
+    });
+
+
+    function modoEdit(v) {
+        var tipo = $(v).attr('data-id');
+
+        if (tipo == 'modoEdit') {
+            $(v).attr('data-id', 'exitModoEdit');
+            $(v).html('<i class="fa fa-plus-circle"></i> Sair modo edição');
+            $('#perguntas').hide();
+            $('#modoEditPage').show();
+            toastr.success('modo edição ativado, clique em salvar para salvar as informações')
+            getPerguntas();
+        } else {
+            $(v).attr('data-id', 'modoEdit');
+            $(v).html('<i class="fa fa-plus-circle"></i> Modo Edição');
+
+            $('#perguntas').show();
+            $('#modoEditPage').hide();
+        }
+    }
+
+    function getPerguntas() {
+
+        $.getJSON(BASE_URL_PAINEL + 'ajax/getPerguntas?true?search=', {
+            id_client: '<?php echo $tableInfo['id_client']; ?>',
+            id_company: '<?php echo $tableInfo['id_company']; ?>',
+            ajax: 'true'
+        }, function(j) {
+            var options = '';
+
+            if (j.length != 0) {
+                for (var i = 0; i < j.length; i++) {
+
+                    options += '<li>'
+                    options += '    <span class="handle ui-sortable-handle">'
+                    options += '        <i class="fas fa-ellipsis-v"></i>'
+                    options += '        <i class="fas fa-ellipsis-v"></i>'
+                    options += '    </span>'
+
+                    options += '    <span class="text">' + j[i].clip_pergunta + '</span>'
+                    options += '    <div class="tools">'
+                    options += '        <i onclick="editPergunta(' + j[i].id_cli_pe + ')" class="fas fa-edit"></i>'
+                    options += '        <i onclick="deletePergunta(' + j[i].id_entrevista + ')"class="fas fa-trash"></i>'
+
+                    options += '    </div>'
+                    options += '</li>'
+
+                }
+            }
+            $('#listPergunta').html(options).show();
+        });
+    };
+
+    function addPergunta() {
+        save_method = 'save';
+        $('#form_update_pergunta')[0].reset();
+        $('.modal-title').text('Adicionar Pergunta');
+        $('[name="id_cli_pe"]').val('');
+        $('[name="clip_pergunta"]').val('');
+
+        $('#modal_form').modal('show')
+    }
+
+    function deletePergunta(id) {
+        save_method = 'delete';
+
+        $.ajax({
+            url: BASE_URL_PAINEL + 'ajax/deletePerguntaByEntrevista/',
+            data: {
+                id_entrevista: id
+            },
+            type: "POST",
+            dataType: "JSON",
+            success: function(data) {
+
+                data ? toastr.success('deletado') : toastr.error('Erro contate o administrador');
+                getPerguntas();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Error get data from ajax');
+            },
+        });
+    }
+
+    function editPergunta(id) {
+        save_method = 'update';
+        $('#form_update_pergunta')[0].reset();
+        $('.form-group').removeClass('has-error');
+        $('.help-block').empty();
+
+        //Ajax Load data from ajax
+        $.ajax({
+            url: BASE_URL_PAINEL + 'ajax/getPerguntaById/' + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+
+                $('[name="id_cli_pe"]').val(id);
+                $('[name="clip_pergunta"]').val(data.clip_pergunta);
+
+                $('.modal-title').text('Editar Pergunta "' + data.clip_pergunta + '"');
+                $('#modal_form').modal('show');
+
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Error get data from ajax');
+            },
+        });
+    }
+</script>

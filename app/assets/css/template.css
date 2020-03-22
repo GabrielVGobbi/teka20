@@ -5,6 +5,81 @@
 }
 
 
+/* checkbox */
+
+.checkbox {
+    display: none;
+}
+
+.checkbox+span {
+    position: relative;
+    display: inline-block;
+    padding: 2px 0 2px 32px;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    color: #9b9b9b;
+    -webkit-transition: all ease 0.2s;
+    -moz-transition: all ease 0.2s;
+    transition: all ease 0.2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox:checked+span {
+    color: #212121;
+}
+
+.checkbox:disabled+span {
+    cursor: default;
+    opacity: .5;
+}
+
+.checkbox+span .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #9b9b9b;
+    border-radius: 4px;
+    -webkit-transition: border-color ease 0.2s;
+    -moz-transition: border-color ease 0.2s;
+    transition: border-color ease 0.2s;
+}
+
+.checkbox:checked+span .icon {
+    color: #3b7cff;
+    border-color: #3b7cff;
+}
+
+.checkbox:disabled+span .icon {
+    background-color: #fafafa;
+}
+
+.checkbox+span .icon span {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    visibility: hidden;
+    width: 100%;
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: all ease 0.2s;
+    -moz-transition: all ease 0.2s;
+    transition: all ease 0.2s;
+}
+
+.checkbox:checked+span .icon span {
+    visibility: visible;
+    opacity: 1;
+}
+
+
 /* clientes box */
 
 .db-wrap {
@@ -1784,7 +1859,7 @@ table {
 td {
     padding: 30px 45px;
     background-color: #fff;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 18px;
     color: #9b9b9b;
     text-align: left;
@@ -2359,132 +2434,6 @@ tr:nth-child(even) td {
     }
     .topbar-special-link {
         margin-left: 0;
-    }
-}
-
-
-/* Skeleton */
-
-.skeleton {
-    position: relative;
-    padding: 90px 10px 30px 80px;
-}
-
-.skeleton--full {
-    display: none;
-    padding: 61px 0 0 70px;
-}
-
-.skeleton-aside,
-.skeleton-content {
-    position: relative;
-    overflow: auto;
-}
-
-.skeleton-aside.onprogress:after,
-.skeleton-content.onprogress:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    content: "";
-    background: rgba(255, 255, 255, 0.95) url("../img/round-loading.svg") center no-repeat;
-    -webkit-background-size: 32px auto;
-    background-size: 32px auto;
-}
-
-.skeleton-aside::-webkit-scrollbar-thumb,
-.skeleton-content::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
-.skeleton-aside:hover::-webkit-scrollbar-thumb,
-.skeleton-content:hover::-webkit-scrollbar-thumb {
-    background-color: #b7b7b7;
-}
-
-.skeleton-aside {
-    float: left;
-    width: 30%;
-}
-
-.skeleton-content {
-    float: right;
-    width: 67%;
-}
-
-.skeleton-content .section-content {
-    max-width: 900px;
-}
-
-.skeleton-aside .search-box {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    padding: 10px 20px;
-    background-color: #f5f5f5;
-}
-
-.skeleton-aside .search-box .search-icon {
-    -webkit-transition: all ease 0.2s;
-    -moz-transition: all ease 0.2s;
-    transition: all ease 0.2s;
-}
-
-.skeleton-aside .search-box .cancel-icon {
-    visibility: hidden;
-    opacity: 0;
-    -webkit-transition: all ease 0.2s;
-    -moz-transition: all ease 0.2s;
-    transition: all ease 0.2s;
-    -webkit-transform: rotateZ(60deg);
-    -moz-transform: rotateZ(60deg);
-    -ms-transform: rotateZ(60deg);
-    -o-transform: rotateZ(60deg);
-    transform: rotateZ(60deg);
-}
-
-.skeleton-aside .search-box.search-performed .search-icon {
-    visibility: hidden;
-    opacity: 0;
-    -webkit-transform: rotateZ(-60deg);
-    -moz-transform: rotateZ(-60deg);
-    -ms-transform: rotateZ(-60deg);
-    -o-transform: rotateZ(-60deg);
-    transform: rotateZ(-60deg);
-}
-
-.skeleton-aside .search-box.search-performed .cancel-icon {
-    visibility: visible;
-    opacity: 1;
-    -webkit-transform: rotateZ(0deg);
-    -moz-transform: rotateZ(0deg);
-    -ms-transform: rotateZ(0deg);
-    -o-transform: rotateZ(0deg);
-    transform: rotateZ(0deg);
-}
-
-.skeleton-aside .search-no-result {
-    font-size: 12px;
-    line-height: 20px;
-    text-align: center;
-    color: #9b9b9b;
-}
-
-@media screen and (max-width: 992px) {
-    .skeleton {
-        padding: 80px 0 20px;
-    }
-    .skeleton--full {
-        padding: 61px 0 0;
-    }
-    .skeleton-aside,
-    .skeleton-content {
-        float: none;
-        width: auto;
-        height: auto !important;
     }
 }
 

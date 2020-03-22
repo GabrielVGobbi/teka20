@@ -52,12 +52,18 @@
 
 
 <div class="card card-solid">
+
 	<div class="card-body pb-0">
+		<div class="mb-10 " style="    margin-bottom: 12px;margin-bottom: 41px;">
+			<a class="btn btn-sm btn-primary left" style="float:right" href="<?php echo BASE_URL_PAINEL; ?>clientes/add"> <i class="fas fa-plus"></i> Novo</a>
+
+		</div>
+
 		<div class="row d-flex align-items-stretch">
 
 			<?php if ($tableDados && count($tableDados) > 0) : ?>
 				<?php foreach ($tableDados as $dd) : ?>
-					<?php $nomecliente = str_replace(' ', '_', $dd['cli_nome']) . '_' . str_replace(' ', '_', $dd['cli_sobrenome']);  ?>
+					<?php $nomecliente = str_replace(' ', '_', strtolower($dd['cli_nome'])) . '_' . str_replace(' ', '_', strtolower($dd['cli_sobrenome']));  ?>
 					<a href="<?php echo BASE_URL_PAINEL ?>clientes/info/<?php echo $dd['id_client']; ?>">
 						<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
 							<div class="card bg-light">
@@ -66,14 +72,14 @@
 									<div class="row">
 										<div class="col-7">
 											<h2 class="lead"><b><?php echo ucfirst($dd['cli_nome']) . ' ' . ucfirst($dd['cli_sobrenome']); ?></b></h2>
-											<p class="text-muted text-sm"><b>About: </b> blá blá blá </p>
+											<p class="text-muted text-sm"><b>Sobre: </b> <?php echo $dd['cli_profissao']; ?> </p>
 											<ul class="ml-4 mb-0 fa-ul text-muted">
 												<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <?php echo $dd['cli_nome'] ?></li>
 												<li class="small pt-2"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <?php echo $dd['cli_telefone'] ?></li>
 											</ul>
 										</div>
 										<div class="col-5 text-center">
-											<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php #echo BASE_URL ?><?php #echo mb_strtolower($dd['id_client'], 'UTF-8') ?><?php #echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>https://adminlte.io/themes/dev/AdminLTE/dist/img/user4-128x128.jpg" alt="User profile picture">
+											<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $dd['id_client']; ?>/<?php echo $dd['cli_photo']; ?>" alt="User profile picture">
 										</div>
 									</div>
 								</div>
@@ -83,7 +89,7 @@
 											<i class="fas fa-comments"></i>
 										</a>
 										<a href="#" class="btn btn-sm btn-primary">
-											<i class="fas fa-user"></i> 
+											<i class="fas fa-user"></i>
 										</a>
 									</div>
 								</div>

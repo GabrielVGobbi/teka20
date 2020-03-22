@@ -22,7 +22,7 @@
 <body class="bg-light">
     <div class="container">
         <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="<?php echo BASE_URL; ?>app/assets/images/logo.png" alt="" width="72" height="72">
+            <img class="d-block mx-auto mb-4" src="<?php echo BASE_URL; ?>app/assets/images/logo.svg" alt="" width="72" height="72">
             <h2>CONSULTORIA
                 DE IMAGEM &
                 ESTILO</h2>

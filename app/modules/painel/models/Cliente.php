@@ -34,7 +34,6 @@ class Cliente extends model
 		$sql = $this->db->prepare("SELECT * FROM client cli 
 			INNER JOIN client_endereco clie ON (clie.id_endereco = cli.id_address)
 			INNER JOIN users user ON (user.id_cliente = cli.id_client)
-			INNER JOIN entrevista ent ON (ent.id_entrevista = cli.id_entrevista)
 
 			WHERE cli.id_company = :id_company AND cli.id_client = :id_client LIMIT 1
 		");
@@ -48,9 +47,8 @@ class Cliente extends model
 			$this->array = $sql->fetch();
 			$this->permissions->setGroup($this->array['id_client'], $id_company, true);
 			$this->array['permissions'] = $this->permissions->returnPermission();
-			
+
 			$this->array['silhueta'] = $this->getSilhuetaClient($this->array['id_silhueta'], $id_company);
-			
 		}
 
 		return $this->array;
@@ -74,10 +72,11 @@ class Cliente extends model
 
 		return $this->array;
 	}
-	public function getSilhuetaClient($id_silhueta, $id_company){
-		
+	public function getSilhuetaClient($id_silhueta, $id_company)
+	{
+
 		$Asilhueta = array();
-		
+
 		$sql = $this->db->prepare("SELECT * FROM client_silhueta WHERE id_company = :id_company AND id_silhueta = :id_silhueta LIMIT 1");
 		$sql->bindValue(":id_company", $id_company);
 		$sql->bindValue(":id_silhueta", $id_silhueta);
@@ -91,18 +90,23 @@ class Cliente extends model
 		return $Asilhueta;
 	}
 
-	public function getEntrevista($id_company)
+	public function getEntrevista($id_company, $id_client)
 	{
-		$sql = $this->db->prepare("SELECT * FROM etapas WHERE id_company = :id_company");
+		$entrevista = array();
+
+		$sql = $this->db->prepare("SELECT *, clip.clip_pergunta FROM entrevista ent
+			INNER JOIN client_perguntas clip ON (clip.id_cli_pe = ent.id_pergunta)
+			WHERE ent.id_company = :id_company AND id_user = :id_client");
 		$sql->bindValue(":id_company", $id_company);
+		$sql->bindValue(":id_client", $id_client);
 
 		$sql->execute();
 
 		if ($sql->rowCount() > 0) {
-			$this->array = $sql->fetchALL();
+			$entrevista = $sql->fetchALL();
 		}
 
-		return $this->array;
+		return $entrevista;
 	}
 
 	public function add($Parametros, $id_company, $file)
@@ -112,7 +116,6 @@ class Cliente extends model
 		$id_endereco   = $this->setEnderecoCliente($Parametros, $id_company);
 
 		//Entrevista
-		$id_entrevista = $this->setEntrevistaCliente(array(), $id_company);
 
 		//Silhueta
 		$id_silhueta = $this->setSilhuetaCliente($Parametros, $id_company);
@@ -127,6 +130,8 @@ class Cliente extends model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
 
+		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : '0';
+
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
@@ -139,11 +144,12 @@ class Cliente extends model
 				cli_telefone 	= :cli_telefone,
 				cli_telefone_celular 	= :cli_telefone_celular,
 
+				cli_tipo 	= :typeClient,
+
 				cli_profissao 	= :cli_profissao,
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
-				id_entrevista = :id_entrevista,
 				id_silhueta = :id_silhueta,
 				
 				created_at		= NOW(),
@@ -155,13 +161,13 @@ class Cliente extends model
 			$sql->bindValue(":cli_sobrenome", ucfirst($cli_sobrenome));
 			$sql->bindValue(":cli_aniversario", $cli_aniversario);
 			$sql->bindValue(":cli_telefone_celular", $cli_telefone_celular);
+			$sql->bindValue(":typeClient", $typeClient);
 			$sql->bindValue(":cli_telefone", $cli_telefone);
 
 			$sql->bindValue(":cli_profissao", ucfirst($cli_profissao));
 			$sql->bindValue(":cli_email", $cli_email);
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
-			$sql->bindValue(":id_entrevista", $id_entrevista);
 			$sql->bindValue(":id_silhueta", $id_silhueta);
 
 
@@ -175,6 +181,9 @@ class Cliente extends model
 
 				$this->addUsuarioByCliente($id_company, $Parametros, $id_cliente);
 
+				$this->setEntrevistaCliente(array(), $id_cliente, $id_company);
+
+
 				$nome_cliente = str_replace(' ', '_', $cli_nome);
 				$cli_sobrenome = str_replace(' ', '_', $cli_sobrenome);
 				$name = mb_strtolower($nome_cliente . '_' . $cli_sobrenome, 'UTF-8');
@@ -184,7 +193,6 @@ class Cliente extends model
 				}
 
 				$this->addPermissions($id_cliente, $id_company);
-				
 
 				#controller::setLog($Parametros, 'cliente', 'add');
 
@@ -216,10 +224,11 @@ class Cliente extends model
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
 
 		//Entrevista
-		$id_entrevista = $this->setEntrevistaCliente($Parametros['entrevista'], $id_company, $Parametros['id_entrevista']);
+		//$id_entrevista = $this->setEntrevistaCliente($Parametros['entrevista'], $id_company, $Parametros['id_entrevista']);
+
 
 		//Silhueta
-		if($Parametros['silhueta'])
+		if ($Parametros['silhueta'])
 			$id_silhueta = $this->setSilhuetaCliente($Parametros['silhueta'], $id_company, $Parametros['id_silhueta']);
 
 		$this->editColoracaoByClient($id_cliente, $id_company, $Parametros);
@@ -233,6 +242,7 @@ class Cliente extends model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
 
+		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : '0';
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
@@ -245,11 +255,13 @@ class Cliente extends model
 				cli_telefone 	= :cli_telefone,
 				cli_telefone_celular 	= :cli_telefone_celular,
 
+				cli_tipo 	= :typeClient,
+
+
 				cli_profissao 	= :cli_profissao,
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
-				id_entrevista 	= :id_entrevista,
 				
 				edited_at		= NOW(),
 				edited_by		= :id_user
@@ -260,17 +272,14 @@ class Cliente extends model
 			$sql->bindValue(":cli_nome", ucfirst($cli_nome));
 			$sql->bindValue(":cli_sobrenome", ucfirst($cli_sobrenome));
 			$sql->bindValue(":cli_aniversario", $cli_aniversario);
+			$sql->bindValue(":typeClient", $typeClient);
 			$sql->bindValue(":cli_telefone_celular", $cli_telefone_celular);
 			$sql->bindValue(":cli_telefone", $cli_telefone);
-
 			$sql->bindValue(":cli_profissao", ucfirst($cli_profissao));
 			$sql->bindValue(":cli_email", $cli_email);
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
 			$sql->bindValue(":params", $params);
-			$sql->bindValue(":id_entrevista", $id_entrevista);
-
-
 			$sql->bindValue(":id_client", $id_cliente);
 			$sql->bindValue(":id_user", $id_user);
 
@@ -282,6 +291,10 @@ class Cliente extends model
 
 				if (isset($file) && !empty($file)) {
 					$this->Photo($id_cliente, $file['fotos'], $id_company, $name);
+				}
+
+				if (isset($Parametros['entrevista'])) {
+					$this->setEntrevistaCliente($Parametros['entrevista'], $id_cliente, $id_company, true);
 				}
 
 				#controller::setLog($Parametros, 'cliente', 'add');
@@ -301,54 +314,56 @@ class Cliente extends model
 		#_FILES['fotos']
 	}
 
-	public function setEntrevistaCliente($perguntas, $id_company, $id_entrevista = false)
+	public function setEntrevistaCliente($Parametros, $id_client, $id_company, $cadastro = false)
 	{
 
-		if ($id_entrevista == false) {
+
+		if ($cadastro == false) {
+
 			$painel = new Painel();
 			$perguntas = $painel->getperguntas($id_company);
-			$array = array();
-			foreach ($perguntas as $pergunta) {
-				$array += [
-					$pergunta['clip_pergunta'] => ''
-				];
-			}
-			$sql = $this->db->prepare("INSERT INTO entrevista SET 
+			foreach ($perguntas as $per) {
+				$id_pergunta = $per['id_pergunta'];
+				$sql = $this->db->prepare("INSERT INTO entrevista SET 
 				
-				perguntas = :perguntas
+					id_pergunta = :id_pergunta,
+					id_company = :id_company,
+					id_user = :id_client
 			
-			");
-			$sql->bindValue(":perguntas", json_encode($array, JSON_UNESCAPED_UNICODE));
-			$sql->execute();
+				");
+				$sql->bindValue(":id_pergunta", $id_pergunta);
+				$sql->bindValue(":id_company", $id_company);
+				$sql->bindValue(":id_client", $id_client);
 
-			$id_entrevista = $this->db->lastInsertId();
+				$sql->execute();
+			}
 		} else {
 
-			$perguntas['entrevista'] = json_encode($perguntas, JSON_UNESCAPED_UNICODE);
+			foreach ($Parametros as $per => $resposta) {
+				if ($resposta == '')
+					continue;
 
-			$sql = $this->db->prepare("UPDATE `entrevista` SET  
+				$sql = $this->db->prepare("UPDATE `entrevista` SET  
 				
-				perguntas = :perguntas
-
-				WHERE id_entrevista = :id_entrevista
+					resposta = :resposta
+				
+					WHERE id_entrevista = :id_entrevista
 			
-			");
-			$sql->bindValue(":perguntas", 		$perguntas['entrevista']);
-			$sql->bindValue(":id_entrevista", $id_entrevista);
-
-			$sql->execute()
-				? controller::alert('success', 'Editado com sucesso')
-				: controller::alert('error', 'Ops!! deu algum erro');
+				");
+				$sql->bindValue(":id_entrevista", $per);
+				$sql->bindValue(":resposta", $resposta);
+				$sql->execute();
+			}
 		}
 
-		return $id_entrevista;
+		#return $id_entrevista;
 	}
 
 	public function setSilhuetaCliente($Parametros, $id_company, $id_silhueta = false)
 	{
 
 		if ($id_silhueta == false) {
- 
+
 			$sql = $this->db->prepare("INSERT INTO client_silhueta SET 
 				
 				id_company = :id_company
@@ -358,13 +373,12 @@ class Cliente extends model
 			$sql->execute();
 
 			$id_silhueta = $this->db->lastInsertId();
-
 		} else {
-			
-			if(!empty($id_silhueta))
+
+			if (!empty($id_silhueta))
 				$p = new Painel();
-				$Parametros['type'] = 'id_silhueta';
-				$p->editPainel($Parametros, 'client_silhueta', $id_company, false, $id_silhueta);
+			$Parametros['type'] = 'id_silhueta';
+			$p->editPainel($Parametros, 'client_silhueta', $id_company, false, $id_silhueta);
 		}
 
 		return $id_silhueta;
@@ -544,6 +558,40 @@ class Cliente extends model
 					");
 				$sql->bindValue(":id_cliente", $id_cliente);
 				$sql->bindValue(":cli_photo", $tmpname);
+				$sql->bindValue(":id_company", $id_company);
+
+				$sql->execute();
+			}
+		} else {
+			error_log(print_r('erro na foto', 1));
+		}
+	}
+
+	public function AddPhotoCartela($id_cartela, $photo, $id_company)
+	{
+		error_log(print_r($photo, 1));
+		if (isset($photo)) {
+
+			$tipo = $photo['fotos']['type'];
+
+			if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
+
+				$tmpname = $photo['fotos']['name'];
+
+				if (is_dir("app/assets/images/cartelas/")) {
+					move_uploaded_file($photo['fotos']['tmp_name'], 'app/assets/images/cartelas/' . $tmpname);
+				} else {
+					mkdir("app/assets/images/cartelas/");
+					move_uploaded_file($photo['fotos']['tmp_name'], 'app/assets/images/cartelas/' . $tmpname);
+				}
+
+				$sql = $this->db->prepare("
+						UPDATE cartela SET
+                			car_img = :car_img		  
+						WHERE id_cartela = :id_cartela AND id_company = :id_company
+					");
+				$sql->bindValue(":id_cartela", $id_cartela);
+				$sql->bindValue(":car_img", 'app/assets/images/cartelas/' . $tmpname);
 				$sql->bindValue(":id_company", $id_company);
 
 				$sql->execute();
@@ -802,7 +850,7 @@ class Cliente extends model
 	public function editColoracaoByClient($id_cliente, $id_company, $Parametros)
 	{
 
-		$id_coloracao = $Parametros['id_coloracao'];
+		$id_coloracao = isset($Parametros['id_coloracao']) ? $Parametros['id_coloracao'] : '';
 
 		if (isset($id_coloracao) && !empty($id_coloracao)) {
 
@@ -830,28 +878,143 @@ class Cliente extends model
 				? controller::alert('success', 'Editado com sucesso')
 				: controller::alert('error', 'Ops!! deu algum erro');
 		} else {
+			if (isset($Parametros['Contraste'])) {
 
-			$sql = $this->db->prepare("INSERT INTO `coloracao` SET 
+				$sql = $this->db->prepare("INSERT INTO `coloracao` SET 
+					
+					col_contraste = :contraste,
+					id_cartela = :id_cartela, 
+					col_temperatura = :col_temperatura,
+					col_intensidade = :col_intensidade,
+					col_profundidade = :col_profundidade,
+					id_user = :id_cliente
 				
-				col_contraste = :contraste,
-				id_cartela = :id_cartela, 
-				col_temperatura = :col_temperatura,
-				col_intensidade = :col_intensidade,
-				col_profundidade = :col_profundidade,
-				id_user = :id_cliente
-			
-			");
+				");
 
-			$sql->bindValue(":contraste", $Parametros['Contraste']);
-			$sql->bindValue(":id_cartela", $Parametros['cartela']);
-			$sql->bindValue(":col_temperatura", $Parametros['Temperatura']);
-			$sql->bindValue(":col_intensidade", $Parametros['Intensidade']);
-			$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
-			$sql->bindValue(":id_cliente", $id_cliente);
+				$sql->bindValue(":contraste", $Parametros['Contraste']);
+				$sql->bindValue(":id_cartela", $Parametros['cartela']);
+				$sql->bindValue(":col_temperatura", $Parametros['Temperatura']);
+				$sql->bindValue(":col_intensidade", $Parametros['Intensidade']);
+				$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
+				$sql->bindValue(":id_cliente", $id_cliente);
 
-			return $sql->execute()
-				? controller::alert('success', 'Editado com sucesso')
-				: controller::alert('error', 'Ops!! deu algum erro');
+				return $sql->execute()
+					? controller::alert('success', 'Editado com sucesso')
+					: controller::alert('error', 'Ops!! deu algum erro');
+			}
 		}
 	}
+
+	public function changeStatus($id_client, $status)
+	{
+
+		$sql = $this->db->prepare("UPDATE `client` cli SET  
+				
+			cli.cli_tipo = :status
+
+			WHERE id_client = :id_client
+		
+		");
+
+		$sql->bindValue(":status", $status);
+		$sql->bindValue(":id_client", $id_client);
+
+		return $sql->execute();
+	}
+
+	public function getEntrevistaById($id_cli_pe)
+	{
+
+		$pergunta = array();
+
+		$sql = $this->db->prepare("
+			SELECT clip_pergunta FROM client_perguntas
+			WHERE id_cli_pe = :id_cli_pe LIMIT 1
+		");
+
+		$sql->bindValue(':id_cli_pe', $id_cli_pe);
+		$sql->execute();
+
+		if ($sql->rowCount() == 1) {
+			$pergunta = $sql->fetch();
+		}
+
+		return $pergunta;
+	}
+
+	public function setPerguntaEntrevista($id_cli_pe = false, $clip_pergunta, $id_company, $id_client = false)
+	{
+
+		if ($id_cli_pe == false) {
+
+			$sql = $this->db->prepare("INSERT INTO client_perguntas SET 
+				
+				clip_pergunta = :clip_pergunta,
+				id_company = :id_company,
+				clip_tipo = 1
+			
+			");
+			$sql->bindValue(":clip_pergunta", $clip_pergunta);
+			$sql->bindValue(":id_company", $id_company);
+
+			$sql->execute();
+
+			$id_cli_pe = $this->db->lastInsertId();
+
+			$sql = $this->db->prepare("UPDATE `client_perguntas` SET  
+				
+				cli_ordem = :cli_ordem
+
+				WHERE id_cli_pe = :id_cli_pe
+			
+			");
+			$sql->bindValue(":cli_ordem", $id_cli_pe);
+			$sql->bindValue(":id_cli_pe", $id_cli_pe);
+			$sql->execute();
+
+			$sql = $this->db->prepare("INSERT INTO entrevista SET 
+				
+				id_pergunta = :id_cli_pe,
+				id_user = :id_user,
+				id_company = :id_company
+			
+			");
+			$sql->bindValue(":id_cli_pe", $id_cli_pe);
+			$sql->bindValue(":id_user", $id_client);
+			$sql->bindValue(":id_company", $id_company);
+
+			
+
+			$sql->execute();
+		} else {
+
+			$sql = $this->db->prepare("UPDATE `client_perguntas` SET  
+				
+				clip_pergunta = :clip_pergunta
+	
+				
+
+
+				WHERE id_cli_pe = :id_cli_pe
+			
+			");
+			$sql->bindValue(":clip_pergunta", $clip_pergunta);
+
+			$sql->bindValue(":id_cli_pe", $id_cli_pe);
+
+			$sql->execute();
+		}
+
+		return $id_cli_pe;
+	}
+
+	public function deletePerguntaByEntrevista($id_entrevista){
+	
+		$sql = $this->db->prepare("DELETE FROM entrevista WHERE id_entrevista = :id_entrevista");
+		$sql->bindValue(":id_entrevista", $id_entrevista);
+		return $sql->execute();
+
+	}
+
+	
 }

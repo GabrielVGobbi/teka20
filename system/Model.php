@@ -9,7 +9,7 @@ class Model
     private $row = 0;
     //Resultado QUERY
     private $result = array();
-    
+
     /**
      * Inicializa o objeto de DB a partir da conexão global
      */
@@ -38,19 +38,77 @@ class Model
      * @param  array $columns Colunas que irá receber os valores ['coluna1', 'coluna2']
      * @return boolean TRUE ou FALSE
      */
-    public function insert(array $columns)
+    public function insert(array $columns, $id_company)
     {
+
         if (!empty($this->table) && (is_array($columns)) && count($columns) > 0) {
             $data = array();
+
+            unset($columns['type']);
+           
+
             foreach (array_keys($columns) as $value) {
                 $data[] = ":" . ($value) . "";
             }
+
+
             $sql = "INSERT INTO " . $this->table . "(" . implode(', ', array_keys($columns)) . ") VALUES (" . implode(', ', $data) . ")";
             $sql = $this->db->prepare($sql);
+            error_log(print_r($sql, 1));
             for ($i = 0; $i < count($data); $i++) {
                 $sql->bindValue($data[$i], trim(addslashes(array_values($columns)[$i])));
             }
-            return $sql->execute();
+            return $sql->execute() ? $this->db->lastInsertId() : false;
+        }
+    }
+    public function insert_painel($arr, $tabela, $id_company)
+    {
+        $certo = true;
+        $nome_tabela = $tabela;
+        $parametros[] = $id_company;
+
+
+        foreach ($arr as $key => $value) {
+            if ($key == 'type')
+                continue;
+            if ($key == '')
+                continue;
+            $nome_coluna[] = '`' . $key . '`';
+        }
+
+        $nome_coluna[] .= '`id_company`';
+
+
+        $params = implode(',', $nome_coluna);
+
+        $query = "INSERT INTO `$nome_tabela` ($params) VALUES (";
+
+        foreach ($arr as $key => $value) {
+            $nome = $key;
+            $valor = $value;
+            if ($nome == 'id')
+                continue;
+            if ($nome == 'type')
+                continue;
+            if ($nome == '')
+                continue;
+
+            $query .=  "?";
+            $parametros[] .= ($value);
+        }
+
+        $parametros[] .= ($id_company);
+
+        $query .= ")";
+
+        if ($certo == true) {
+            $sql = $this->db->prepare($query);
+            error_log(print_r($sql, 1));
+            if ($sql->execute($parametros)) {
+                return  $this->db->lastInsertId();
+            } else {
+                return false;
+            }
         }
     }
     /**
@@ -62,7 +120,7 @@ class Model
      */
     public function update($columns, $where = array(), $where_cond = 'AND')
     {
-    
+
         if (!empty($this->table) && count($columns) > 0) {
             $update = array();
             foreach ($columns as $key => $value) {
@@ -118,11 +176,12 @@ class Model
         }
     }
     /**
-    * Conta os registros da tabela
-    * @param  string $column Coluna para contagem
-    */
-    public function count($column = 'id') {
-        $sql = $this->db->query("SELECT $column FROM ".$this->table);            
+     * Conta os registros da tabela
+     * @param  string $column Coluna para contagem
+     */
+    public function count($column = 'id')
+    {
+        $sql = $this->db->query("SELECT $column FROM " . $this->table);
         return $sql->rowCount();
-    }    
+    }
 }

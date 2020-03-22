@@ -178,7 +178,7 @@ class controller
 
 	public static function ReturnValor($valor)
 	{
-
+		$valor = ucfirst($valor);
 		$valor = trim($valor);
 		$valor = ucfirst($valor);
 
@@ -187,10 +187,9 @@ class controller
 
 	public static function alert($tipo, $mensagem)
 	{
-
+		
 		$_SESSION['alert']['mensagem'] = $mensagem;
 		$_SESSION['alert']['tipo'] = $tipo;
-
 		return $_SESSION;
 	}
 

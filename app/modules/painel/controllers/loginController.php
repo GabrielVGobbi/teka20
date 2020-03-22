@@ -36,7 +36,7 @@ class loginController extends controller {
 					header("location:".BASE_URL_PAINEL."home");
 					exit;
 				} else { 
-					header("location:".BASE_URL_PAINEL."clientes");
+					header("location:".BASE_URL_PAINEL."home");
 					exit;
 				}
 				

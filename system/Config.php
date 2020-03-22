@@ -24,4 +24,10 @@ if(ENVIRONMENT == 'develop'){
 	$config['db_pass'] = 'GGv27080@';
 }
 
+
+/* Configurações do PayPal */
+$config['paypal_clientid'] = 'AeKiIhhvnweI--q-EnPsi3S21E-vZTdXdXJVmhtN38caQK5rxF2CaLNmMADjFml9kdeRuQfSn3_-I7xL';
+$config['paypal_secret'] = 'ENWXUPExcr0PRf22sV8oFfvgN0aCdIdH908hoNR5QsZrLmCJWIhzf92nl0e0z9RVD3xLhjLalI3cSnoF';
+
+
 ?>

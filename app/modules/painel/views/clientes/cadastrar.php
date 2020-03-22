@@ -1,172 +1,184 @@
-<div class="col-md-12">
-    <div class="nav-tabs-custom">
-        <form method="POST" id="cliete_edit" enctype="multipart/form-data" action="<?php echo BASE_URL_PAINEL; ?>clientes/action">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab_dados" data-toggle="tab">Dados</a></li>
-                <!--<li class=""><a href="#tab_dados" data-toggle="tab">Geral</a></li> -->
-                <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="tab_dados">
-                    <div class="container-fluid">
-                        <br>
+<form id="client_form" method="POST" action="<?php echo BASE_URL_PAINEL; ?>clientes/action" enctype="multipart/form-data">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="dados">
                         <div class="row">
-                            <div class="col-xs-12 col-md-2 col-lg-2 col-xl-1">
-                                <div class="btn btn-file text-center" style="display: block;">
-                                    <img class="profile-user-img img-responsive" name="preview" src="https://www.bluempregos.com.br/wp-content/uploads/2018/10/sem-foto.gif" alt="foto">
-                                    <input type="file" onchange="previewImagem()" id="imagem" name="fotos" multiple="">
-                                </div>
-                                <h3 class="profile-username text-center"></h3>
-                                <p class="text-muted text-center"></p>
-                                <div class="text-center">
-                                    <img style="max-height: 110px;min-height: 110px;">
-                                </div>
-                            </div>
                             <div class="col-md-3">
-                                <div id="formnome" class="form-group">
-                                    <label>Nome</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-fw fa-user"></i>
+                                <div class="card-body box-profile">
+                                    <div class="text-center">
+                                        <div class="btn btn-file text-center">
+                                            <img class="profile-user-img img-fluid img-circle" name="preview" src="https://www.bluempregos.com.br/wp-content/uploads/2018/10/sem-foto.gif" alt="User profile picture">
+                                            <input type="file" onchange="previewImagem()" id="imagem" name="fotos" multiple="">
+
                                         </div>
-                                        <input type="text" data-name="" class="form-control" name="cli_nome" id="cli_nome" value="">
                                     </div>
+                                    <h3 class="profile-username text-center"></h3>
+
+                                    <p class="text-muted text-center"></p>
+
+                                    <ul class="list-group list-group-unbordered mb-3">
+                                        <li class="list-group-item">
+                                            <b>Tipo</b>
+                                            <a class="float-right">
+                                                <select class="form-control select2" id="typeClient" name="typeClient" data-placeholder="Selecione">
+                                                    <option value="0">cliente</option>
+                                                    <option value="1">possivel cliente</option>
+                                                </select>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
+                            <div class="col-md-9">
 
-                            <div class="col-md-3">
-                                <div id="formnome" class="form-group">
-                                    <label>Sobrenome</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-fw fa-user"></i>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="">Nome</label>
+                                            <div class="input-group mb-3" id="formnome">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_nome" id="cli_nome" value="">
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="cli_sobrenome" id="cli_sobrenome">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div id="foremail" class="form-group">
-                                    <label>Email</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-envelope"></i>
+
+                                        <div class="col-md-6">
+                                            <label for="">Sobrenome</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-user-edit"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_sobrenome" id="cli_sobrenome" value="">
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="cli_email" id="cli_email">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-md-2">
-                                <div id="" class="form-group">
-                                    <label>Data de nascimento</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-envelope"></i>
+                                        <div class="col-md-9">
+                                            <label for="">E-mail</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend" id="foremail">
+                                                    <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_email" id="cli_email" value="">
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-md-2">
-                                <div id="" class="form-group">
-                                    <label>Telefone</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-phone"></i>
+                                        <div class="col-md-3">
+                                            <label for="">Profissão</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_profissao" id="cli_profissao" value="">
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" data-inputmask='"mask": "(11) 99999-9999"' data-mask>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div id="" class="form-group">
-                                    <label>Profissão</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-fw fa-user-secret"></i>
+                                        <div class="col-md-3">
+                                            <label for="">Data Nascimento</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_aniversario" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false" >
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="cli_profissao" id="cli_profissao">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div id="" class="form-group">
-                                    <label>Definir Senha</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-fw fa-lock"></i>
+                                        <div class="col-md-3">
+                                            <label for="">Tel Fixo</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="">
+                                            </div>
                                         </div>
-                                        <input type="password" class="form-control" name="password" id="password">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-sm-12 col-md-10 col-lg-10 col-xl-12">
-                                <div class="box box-default box-solid">
+                                        <div class="col-md-3">
+                                            <label for="">Tel Celular</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="box-header with-border">
-                                                <h3 class="box-title">Endereço</h3>
-                                            </div>
-                                            <div class="box-body" style="">
-                                                <div class="col-md-2">
-                                                    <div class="form-group" id="forcep">
-                                                        <label>CEP</label>
-                                                        <input type="text" class="form-control" name="cep" id="cep" value="" size="10" maxlength="9" onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-mask>
-                                                    </div>
-                                                </div>
+                                            <div class="callout callout-info">
+                                                <h5><i class="fas fa-building"></i> Endereço</h5><br>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>Rua</label>
-                                                        <input type="text" class="form-control" readonly name="rua" id="rua" value="">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label for="">Cep</label>
+                                                        <div class="input-group mb-3" >
+                                                            <div class="input-group-prepend"></div>
+                                                            <input type="text" class="form-control" name="cep" id="cep" size="10" maxlength="9" onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-mask value="">
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    <div class="col-md-9">
+                                                        <label for="">Rua</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
 
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Bairro</label>
-                                                        <input type="text" class="form-control" readonly name="bairro" id="bairro" value="">
+                                                            </div>
+                                                            <input type="text" class="form-control" name="rua" id="rua" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Cidade</label>
-                                                        <input type="text" class="form-control" readonly name="cidade" id="cidade" value="">
+                                                    <div class="col-md-4">
+                                                        <label for="">Bairro</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+
+                                                            </div>
+                                                            <input type="text" class="form-control" name="bairro" id="bairro" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-3" style="display:none">
-                                                    <div class="form-group">
-                                                        <label>Municipio</label>
-                                                        <input type="text" readonly class="form-control" name="municipio" id="municipio" autocomplete="off" value="">
+                                                    <div class="col-md-8">
+                                                        <label for="">Cidade</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+
+                                                            </div>
+                                                            <input type="text" class="form-control" name="cidade" id="cidade" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Estado</label>
-                                                        <input type="text" readonly class="form-control" name="estado" id="estado" autocomplete="off" value="">
+                                                    <div class="col-md-1">
+                                                        <label for="">Estado</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+
+                                                            </div>
+                                                            <input type="text" class="form-control" name="estado" id="estado" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Nº</label>
-                                                        <input type="text" class="form-control" name="numero" id="numero" value="">
+                                                    <div class="col-md-2">
+                                                        <label for="">Nº</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+
+                                                            </div>
+                                                            <input type="text" class="form-control" name="numero" id="numero" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Complemento</label>
-                                                        <input type="text" class="form-control" name="complemento" id="complemento" value="">
+                                                    <div class="col-md-9">
+                                                        <label for="">Complemento</label>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+
+                                                            </div>
+                                                            <input type="text" class="form-control" name="complemento" id="complemento" value="">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -177,7 +189,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="">
                     <label class="popver_urgencia" style="margin-right: 17px;">
                         <input type="checkbox" class="checkbox_desgn" name="notifyEmail" value="true">
                         <span>
@@ -187,11 +199,9 @@
                             Enviar Aviso por Email
                         </span>
                     </label>
-                    <div id="submit" class="btn btn-primary">Salvar</div>
+                    <div id="submit" style="float: right;" class="btn btn-primary left submit_edit">Salvar</div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<script src="<?php echo BASE_URL; ?>app/assets/js/parametros/<?php echo $viewData['pageController']; ?>.js"></script>
+</form>

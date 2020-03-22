@@ -24,6 +24,17 @@ class ClientesController extends controller
         $this->permissions = new Permissions();
         $this->email = new Email();
 
+        global $config;
+
+        global $config;
+
+        // Começar a integração ao Paypal
+        $apiContext = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential(
+                $config['paypal_clientid'],
+                $config['paypal_secret']
+            )
+        );
 
 
         $this->dataInfo = array(
@@ -82,11 +93,10 @@ class ClientesController extends controller
                 header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
 
                 exit();
-                
             } else {
 
                 $this->cliente->edit($_POST, $this->user->getCompany(), $_FILES, $this->user->getId());
-                
+
                 $this->cliente->editPermissions($_POST['permissions'], $this->user->getCompany(), $_POST['id_client']);
 
                 header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id_client']);
@@ -94,6 +104,7 @@ class ClientesController extends controller
                 exit();
             }
         } else {
+            echo 'sem nome';
         }
     }
 
@@ -104,7 +115,6 @@ class ClientesController extends controller
 
             $this->dataInfo['tableInfo']        = $this->cliente->getInfo($id_cliente, $this->id_company);
             $this->dataInfo['paleta']           = $this->cliente->getPaleta($this->id_company);
-            //$this->dataInfo['entrevista']       = $this->cliente->getEntrevista($this->id_company);
             $this->dataInfo['permissons_all']   = $this->permissions->getlistCliente($this->id_company);
 
             $this->dataInfo['imagem'] =  $this->cliente->getFotosByPasta($id_cliente, $this->id_company);
@@ -188,5 +198,13 @@ class ClientesController extends controller
 
             exit();
         }
+    }
+
+    public function paypal(){
+        
+        $json_file = file_get_contents("https://api.sandbox.paypal.com/v2/invoicing/invoices?total_required=true?Authorization=ENWXUPExcr0PRf22sV8oFfvgN0aCdIdH908hoNR5QsZrLmCJWIhzf92nl0e0z9RVD3xLhjLalI3cSnoF");
+        $json_str = json_decode($json_file, true);
+        error_log(print_r($json_str,1));
+
     }
 }

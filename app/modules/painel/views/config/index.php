@@ -1,26 +1,32 @@
-<div class="clearfix">
-	<aside class="skeleton-aside" style="height: 613.01px;">
-		<div class="asidenav">
-			<div class="asidenav-group">
-				<ul>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/site">Configurações do site</a></li>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/logotype">Logotipo</a></li>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/other">Outras configurações</a></li>
-				</ul>
-			</div>
+<?php include_once('cadastrar.php'); ?>
+<div class="row">
+	<div class="col-md-4">
+		<div class="clearfix">
+			<aside class="skeleton-aside" style="height: 613.01px;">
+				<div class="asidenav">
+					<div class="asidenav-group">
+						<div class="asidenav-title"><b> Geral </b></div>
+						<ul>
+							<li class="navConfig" data-id=""><a href="#">Logotipo</a></li>
+							<li class="navConfig" data-id="cartelas"><a href="#">Cartelas</a></li>
+							<li class="navConfig" data-id=""><a href="#">Configurações do site</a></li>
 
-			<div class="asidenav-group">
-				<div class="asidenav-title"><b> Email </b></div>
-				<ul>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/smtp">SMTP</a></li>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/notifications">Notificações do Email</a></li>
-				</ul>
-			</div>
 
-			<div class="asidenav-group">
-				<div class="asidenav-title"><b>Integrações</b></div>
-				<ul>
-					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/google-analytics">Google Analytics</a></li>
+						</ul>
+					</div>
+
+					<div class="asidenav-group">
+						<div class="asidenav-title"><b> Email </b></div>
+						<ul>
+							<li class=""><a href="">SMTP</a></li>
+							<li class=""><a href="">Notificações do Email</a></li>
+						</ul>
+					</div>
+
+					<!--<div class="asidenav-group">
+						<div class="asidenav-title"><b>Integrações</b></div>
+						<ul>
+							<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/google-analytics">Google Analytics</a></li>
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/google-drive">Selecione Google Drive</a></li>
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/dropbox">Escolha Dropbox</a></li>
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/onedrive">Selecione o arquivo One Drive</a></li>
@@ -28,34 +34,91 @@
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/stripe">Galeria de Integração</a></li>
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/facebook">Login no Facebook</a></li>
 					<li class=""><a href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/recaptcha">ReCaptcha</a></li>
-				</ul>
-			</div>
+						</ul>
+					</div>-->
+				</div>
+			</aside>
+
+
 		</div>
-	</aside>
+	</div>
 
-	<section class="skeleton-content" style="height: 613.01px;display:none">
-		<form class="js-ajax-form" action="http://localhost/Projeto-em-desenvolvimento/SocialMafia/settings/google-analytics" method="POST">
-			<input type="hidden" name="action" value="save">
+	<div class="col-md-8 tela" id="cartelas" style="display:none">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Cartela</h3>
 
-			<div class="section-header clearfix">
-				<h2 class="section-title">Google Analytics</h2>
-				<div class="section-actions clearfix hide-on-large-only">
-					<a class="mdi mdi-menu-down icon js-settings-menu" href="javascript:void(0)"></a>
+
+				<div class="card-tools">
+					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalCadastrar">  <i class="fas fa-plus"></i> Novo</button>
 				</div>
 			</div>
+			<div class="card-body p-0">
+				<table class="table table-striped projects">
+					<thead>
+						<tr>
+							<th style="width: 1%">
+								#
+							</th>
+							<th style="width: 20%">
+								Imagem
+							</th>
+							<th style="width: 30%">
+								Nome
+							</th>
 
+							<th>
+								URL
+							</th>
+							<th style="width: 8%" class="text-center">
+								Status
+							</th>
 
-		</form>
-	</section>
-</div>
-<!-- <div class="col-xs-12 ">
-	<div class="container">
-		<br>
-		<div class="row">
-			<a class="btn btn-app" style="min-width: 12%;height: 12%;">
-				<i class="fa fa-edit"></i> Nova Permissão
-			</a>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($paleta as $car) : ?>
+							<tr>
+								<td>
+									<?php echo $car['id_cartela']; ?>
+								</td>
+								<td>
+									<ul class="list-inline">
+										<li class="list-inline-item">
+											<a href="<?php echo BASE_URL;?><?php echo $car['car_img']; ?>" target="_blank"><img alt="cartela" class="table-avatar" src="<?php echo BASE_URL; ?><?php echo $car['car_img']; ?>"></a>
+										</li>
+									</ul>
+								</td>
+								<td>
+									<a>
+										<?php echo $car['car_nome']; ?>
+									</a>
+									<br>
+								</td>
+
+								<td class="project-state">
+									<span class=""><?php echo $car['car_img']; ?></span>
+								</td>
+								<td class="project-state">
+									<span class="badge badge-success">Ativo</span>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
 
+<script>
+	$(window).on('load', function() {
+		$('.navConfig').click(function() {
+			$('.navConfig').removeClass('active');
+			$('.tela').hide();
+			$(this).addClass('active');
+			var id = $(this).attr('data-id');
+			$('#' + id).show('slow');
+		});
+	});
+</script>

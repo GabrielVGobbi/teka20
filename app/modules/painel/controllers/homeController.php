@@ -27,7 +27,7 @@ class homeController extends controller
 		$this->dataInfo = array(
 			'pageController' => 'home',
 			'user' => $this->user->getInfo($this->user->getId(), $this->user->getCompany()),
-			'titlePage' => 'Bem-vindo(a)',
+			'titlePage' => 'Dashboard',
 			'tableDados' => array()
 
 		);
@@ -40,12 +40,14 @@ class homeController extends controller
 			$this->dataInfo['tableInfo']    = $this->cliente->getInfo($this->user->getClienteId(), $this->id_company);
 
 			$this->loadView('', $this->dataInfo);
+		}else {
+			$this->dataInfo['paleta']       = $this->cliente->getPaleta($this->user->getCompany());
+			#mudar $this->dataInfo['entrevista']   = $this->cliente->getEntrevista($this->user->getCompany());
+	
+			$this->loadView('dash/index', $this->dataInfo);
+			#$this->email->enviarEmail();
 		}
-		$this->dataInfo['paleta']       = $this->cliente->getPaleta($this->user->getCompany());
-		$this->dataInfo['entrevista']   = $this->cliente->getEntrevista($this->user->getCompany());
-
-
-		#$this->email->enviarEmail();
+	
 	}
 
 	public function entrevista($id_cliente)

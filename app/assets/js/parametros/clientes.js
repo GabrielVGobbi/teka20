@@ -53,20 +53,20 @@ function pesquisacep(valor) {
             //Insere script no documento e carrega o conteúdo.
             document.body.appendChild(script);
 
-            $("#cepform").removeClass("has-error");
+            $("#cepform").removeClass("is-invalid");
 
         } //end if.
         else {
             //cep é inválido.
             limpa_formulário_cep();
-            $("#cepform").addClass("has-error");
+            $("#cepform").addClass("is-invalid");
             toastr.error('tem um numero a mais no cep');
         }
     } //end if.
     else {
         //cep sem valor, limpa formulário.
         limpa_formulário_cep();
-        $("#cepform").addClass("has-error");
+        $("#cepform").addClass("is-invalid");
     }
 };
 
@@ -79,16 +79,16 @@ $(function () {
 
 
         nome.length != ''
-            ? $("#formnome").removeClass("has-error") 
-            : $("#formnome").addClass("has-error") + toastr.error('Nome é Obrigatorio')
+            ? $("#cli_nome").removeClass("is-invalid") 
+            : $("#cli_nome").addClass("is-invalid") + toastr.error('Nome é Obrigatorio')
         
         email.length != ''
-            ? $("#foremail").removeClass("has-error") 
-            : $("#foremail").addClass("has-error") + toastr.error('Email é Obrigatorio')
+            ? $("#cli_email").removeClass("is-invalid") 
+            : $("#cli_email").addClass("is-invalid") + toastr.error('Email é Obrigatorio')
 
         cep.length != ''
-            ? $("#forcep").removeClass("has-error") 
-            : $("#forcep").addClass("has-error") + toastr.error('Cep é Obrigatorio')
+            ? $("#cep").removeClass("is-invalid") 
+            : $("#cep").addClass("is-invalid") + toastr.error('Cep é Obrigatorio')
 
         $(document).ready(submit);
         
@@ -96,8 +96,8 @@ $(function () {
 
 
     function submit() {
-        if (!$(".form-group").hasClass("has-warning") && !$(".form-group").hasClass("has-error"))
-            $("#cliete_edit").submit();
+        if (!$(".form-control").hasClass("has-warning") && !$(".form-control").hasClass("is-invalid"))
+            $("#client_form").submit();
     }
 
     $("#copyEmail").on('click', function (e) {

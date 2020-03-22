@@ -33,8 +33,6 @@ class ajaxController extends controller
     public function ValidateClienteDouble()
     {
 
-        $u = new Users();
-        $u->setLoggedUser();
         $data = array();
 
         $data = $this->cliente->validacao($this->user->getCompany(), $_POST['nome']);
@@ -63,20 +61,20 @@ class ajaxController extends controller
 
             //add
             if (!empty($_FILES)) {
-                $name = str_replace(' ', '_', $cliente['cli_nome']).'_'.str_replace(' ', '_', $cliente['cli_sobrenome']);
+                $name = str_replace(' ', '_', $cliente['cli_nome']) . '_' . str_replace(' ', '_', $cliente['cli_sobrenome']);
 
                 $name = str_replace('-', '', $name);
                 $name = str_replace(' - ', '_', $name);
                 $name = str_replace(' ', '_', $name);
 
-                $c->addPhotoExImagemClient($id_cliente, mb_strtolower($name,'UTF-8'), $_FILES, $id_company, $typePasta);
+                $c->addPhotoExImagemClient($id_cliente, mb_strtolower($name, 'UTF-8'), $_FILES, $id_company, $typePasta);
             }
         }
     }
 
     public function getImagesByCliente($typePasta, $id_cliente, $nomecliente)
     {
-        
+
         $u = new Users();
         $u->setLoggedUser();
         $c = new Cliente();
@@ -84,7 +82,7 @@ class ajaxController extends controller
         $id_company = $u->getCompany();
 
         $arrayFotos = $c->getFotosByPasta($id_cliente, $typePasta, $id_company);
-        
+
         $qntFoto = 0;
         if (isset($arrayFotos) && !empty($arrayFotos)) {
             $qntFoto = count($arrayFotos);
@@ -124,17 +122,17 @@ class ajaxController extends controller
                                 min-height: 200px;">
                                 <span class="mailbox-attachment-icon">
                                     <img
-                                class="fa fa-fw fa-file-image-o img-responsive" src="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'">
+                                class="fa fa-fw fa-file-image-o img-responsive" src="' . BASE_URL . 'app/assets/images/clientes/' . mb_strtolower($id_cliente, 'UTF-8') . '/' . $file['img_type'] . '/' . mb_strtolower($file['img_url'], 'UTF-8') . '">
                                     </img>
                                 </span>
                                 <div class="mailbox-attachment-info"  style="max-width: 29ch;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 white-space: nowrap;">
-                                    <a href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" target="_blank" class="mailbox-attachment-name">' . $fileName . '</a>
+                                    <a href="' . BASE_URL . 'app/assets/images/clientes/' . mb_strtolower($id_cliente, 'UTF-8') . '/' . $file['img_type'] . '/' . mb_strtolower($file['img_url'], 'UTF-8') . '" target="_blank" class="mailbox-attachment-name">' . $fileName . '</a>
                                     <span class="mailbox-attachment-size">
                                         ' . $type . '
-                                        <a download href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                                        <a download href="' . BASE_URL . 'app/assets/images/clientes/' . mb_strtolower($id_cliente, 'UTF-8') . '/' . $file['img_type'] . '/' . mb_strtolower($file['img_url'], 'UTF-8') . '" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                                         <a onclick="toastAlertDelete(' . $file['id_image'] . ', ' . $id_cliente . ')" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
 
                                         </span>
@@ -156,19 +154,96 @@ class ajaxController extends controller
     function saveComentyExercicioImagem()
     {
 
-        $u = new Users();
-        $u->setLoggedUser();
 
-        if(isset($_POST) && isset($_POST['id_etapa']) && !empty($_POST['id_etapa'])){
 
-            $id_cliente =  !empty($u->getClienteId()) ? $u->getClienteId() : $_POST['id_cliente']; 
-            
+        if (isset($_POST) && isset($_POST['id_etapa']) && !empty($_POST['id_etapa'])) {
+
+            $id_cliente =  !empty($u->getClienteId()) ? $u->getClienteId() : $_POST['id_cliente'];
+
             $notepad = $u->saveComentyExercicioImagem($_POST, $id_cliente, $u->getCompany());
 
             echo $notepad ? json_encode($notepad) : false;
         }
-
     }
 
+    /**
+     * Mudar o status do cliente 0 = Ativo 1 = possivel cliente
+     * @return json TRUE ou FALSE
+     */
+    public function statusClient()
+    {
+        $id_cliente = $_POST['id_client'];
+        $status =  $_POST['statusChange'];
 
+        if (!empty($id_cliente)) {
+            $this->retorno = $this->cliente->changeStatus($id_cliente, $status);
+            echo json_encode($this->retorno);
+        } else {
+            return false;
+        }
+    }
+    /**
+     * Pegar a entrevista do usuario
+     * @return json array ou FALSE
+     */
+    public function getPerguntas()
+    {
+
+        $c = new Cliente();
+
+        if (isset($_REQUEST['id_client']) && !empty($_REQUEST['id_client'])) {
+
+            $id =  $c->getEntrevista($_REQUEST['id_company'], $_REQUEST['id_client']);
+        }
+
+        if ($id != false) {
+            echo json_encode($id);
+        } else {
+            echo json_encode('');
+        }
+
+        exit;
+    }
+    public function getPerguntaById($id_entrevista)
+    {
+
+        $c = new Cliente();
+
+
+        $array =  $c->getEntrevistaById($id_entrevista);
+
+
+        echo $array == true ?  json_encode($array) :  json_encode('');
+
+        exit;
+    }
+
+    public function actionPergunta()
+    {
+
+        $c = new Cliente();
+        $edit = false;
+        if (isset($_REQUEST['id_cli_pe']) && !empty($_REQUEST['id_cli_pe'])) {
+
+            $edit =  $c->setPerguntaEntrevista($_REQUEST['id_cli_pe'], $_REQUEST['clip_pergunta'], $this->user->getCompany());
+        } else {
+            $edit =  $c->setPerguntaEntrevista(false, $_REQUEST['clip_pergunta'], $this->user->getCompany(), $_REQUEST['id_client']);
+        }
+
+        echo $edit == true ?  json_encode($edit) :  json_encode(false);
+
+        exit;
+    }
+    public function deletePerguntaByEntrevista()
+    {
+        $c = new Cliente();
+        $edit = false;
+        if (isset($_REQUEST['id_entrevista']) && !empty($_REQUEST['id_entrevista'])) {
+
+            $edit =  $c->deletePerguntaByEntrevista($_REQUEST['id_entrevista']);
+        } 
+        echo $edit == true ?  json_encode($edit) :  json_encode(false);
+
+        exit;
+    }
 }

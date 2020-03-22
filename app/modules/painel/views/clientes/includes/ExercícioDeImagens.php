@@ -1,4 +1,4 @@
-<div class="row">
+<!--<div class="row">
   <div class="col-5 col-sm-3">
     <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
       <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#inUsed" role="tab" aria-controls="vert-tabs-home" aria-selected="true"><i style="margin-right: 5px;" class="ml-8 fas fa-user-lock"> </i> Gostaria de ser assim</a>
@@ -20,4 +20,5 @@
      
    </div>
  </div>
-</div>
+</div>-->
+

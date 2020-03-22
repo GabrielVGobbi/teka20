@@ -1,5 +1,5 @@
 <?php
-$nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']);
+$nomecliente = str_replace(' ', '_', strtolower($tableInfo['cli_nome']));
 $idade = 0;
 if ($tableInfo['cli_aniversario'] != '') {
 	$data = $tableInfo['cli_aniversario'];
@@ -22,37 +22,32 @@ if ($tableInfo['cli_aniversario'] != '') {
 		<div class="card">
 			<div class="card-header p-2">
 				<ul class="nav nav-pills">
-					<li class="nav-item"><a class="nav-link active" href="#dados" data-toggle="tab">Dados</a></li>
+					<li class="nav-item"><a class="nav-link " href="#dados" data-toggle="tab">Dados</a></li>
 					<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
 					<?php $permissions = array();
 					foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-						<li class="nav-item"><a class="nav-link" href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+						<li class="nav-item"><a class="nav-link <?= $value == 'Exercício De Imagens' ? 'active' : '' ?> " href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 					<?php endforeach; ?>
 				</ul>
 
 			</div>
 			<div class="card-body">
 				<div class="tab-content">
-
-
-					<div class="tab-pane active" id="dados">
-
+					<div class="tab-pane " id="dados">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="card-body box-profile">
-									<div class="text-center">
-										<img class="profile-user-img img-fluid img-circle" src="https://adminlte.io/themes/dev/AdminLTE/dist/img/user4-128x128.jpg" alt="User profile picture">
+									<div class="btn btn-file text-center" style="display:block;">
+										<img class="profile-user-img img-fluid img-circle" name="preview" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $tableInfo['id_client']; ?>/<?php echo $tableInfo['cli_photo']; ?>" alt="User profile picture">
+										<input type="file" onchange="previewImagem()" id="imagem" name="fotos" multiple="">
+
 									</div>
-
-									<h3 class="profile-username text-center"><?php echo $tableInfo['cli_nome']; ?></h3>
-
-									<p class="text-muted text-center"><?php echo $tableInfo['cli_profissao']; ?></p>
 
 									<ul class="list-group list-group-unbordered mb-3">
 										<li class="list-group-item">
 											<b>Status</b>
 											<a class="float-right">
-												<div class="custom-control custom-switch custom-switch-off-success custom-switch-on-danger">
+												<div class="custom-control custom-switch custom-switch-off-<?php echo $tableInfo['cli_tipo'] == 0 ? 'success custom-switch-on-danger' : 'danger custom-switch-on-success'; ?>">
 													<input type="checkbox" class="custom-control-input" id="customStatus">
 													<label class="custom-control-label" for="customStatus"></label>
 												</div>
@@ -72,7 +67,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 										<li class="list-group-item">
 											<b>Tipo</b>
 											<a class="float-right">
-												<span> Possivel cliente </span>
+												<span id="tipoClient"> <?php echo $tableInfo['cli_tipo'] == 0 ? 'cliente' : 'possivel cliente'; ?> </span>
 											</a>
 										</li>
 
@@ -143,7 +138,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario']; ?>">
+												<input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario']; ?>" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
 											</div>
 										</div>
 
@@ -163,7 +158,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>">
+												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>" data-inputmask='"mask": "(99) 9999-99999"' data-mask>
 											</div>
 										</div>
 
@@ -173,7 +168,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>">
+												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>" data-inputmask='"mask": "(99) 9999-99999"' data-mask>
 											</div>
 										</div>
 									</div>
@@ -257,47 +252,28 @@ if ($tableInfo['cli_aniversario'] != '') {
 										</div>
 									</div>
 								</div>
-
-
 							</div>
 						</div>
-
 					</div>
 
-
-
 					<div class="tab-pane" id="entrevista">
-						<div class="row">
-							<?php
-							$array = json_decode($tableInfo['perguntas']);
-							foreach ($array as $pergunta => $reposta) :
-							?>
-								<div class="col-md-12 mb-3">
-									<label style="font-weight: 700;" for="<?php echo $pergunta; ?>"><?php echo $pergunta; ?></label>
-									<textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $pergunta; ?>]" id="<?php echo $pergunta; ?>" placeholder="Resposta: "><?php echo $reposta; ?></textarea>
-									<div class="invalid-feedback">
+						<?php include_once("includes/entrevista.php"); ?>
+					</div>
 
-									</div>
-								</div>
-							<?php endforeach; ?>
+					<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
+					<?php error_log(print_r($value,1)); ?>
+						<div class="tab-pane <?= $value == ' Exercício De Imagens' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
+							<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 						</div>
-</form>
-</div>
+					<?php endforeach; ?>
 
-<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-	<div class="tab-pane <?php #echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' 
-							?>" id="<?php echo str_replace(' ', '', $value); ?>">
-		<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
+				</div>
+			</div>
+			<div class="">
+				<div id="" style="float: right;" class="btn btn-primary left submit_edit">Salvar</div>
+			</div>
+		</div>
 	</div>
-<?php endforeach; ?>
-
-</div>
-</div>
-<div class="">
-	<div id="" style="float: right;" class="btn btn-primary left submit_edit">Salvar</div>
-</div>
-</div>
-</div>
 </form>
 <script>
 	$(function() {
@@ -308,5 +284,33 @@ if ($tableInfo['cli_aniversario'] != '') {
 		$(".submit_edit").click(function() {
 			$("#edit_client").submit();
 		});
+
+		$("#customStatus").on('change', function() {
+			var id_client = $('#id_client').val();
+			var status = '<?php echo $tableInfo['cli_tipo']; ?>';
+
+			statusChange = status == 0 ? '1' : '0';
+
+			$.ajax({
+				url: BASE_URL_PAINEL + 'ajax/statusClient/',
+				data: {
+					id_client,
+					statusChange,
+				},
+				type: "POST",
+				dataType: "JSON",
+				success: function(data) {
+
+					location.reload();
+
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					toastr.error('Erro contate o administrador CODADDETAPACONX1');
+				},
+			});
+
+
+		})
 	});
 </script>

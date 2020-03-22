@@ -33,11 +33,11 @@
         <div class="login-logo">
             <div class="row" style="margin-bottom:25px;">
                 <div class="text-center">
-                    <img src="<?php echo BASE_URL; ?>app/assets/images/logo.png" style="width: 20%;">
+                    <img src="<?php echo BASE_URL; ?>app/assets/images/logoBlack.png" style="    width: 62%;">
                 </div>
             </div>
 
-            <a href="../../index2.html" style="    color:#000;"><b>Style</b>Admin</a>
+            <a href="/" style="    color:#000;"><b>Style</b>Admin</a>
         </div>
         <div class="" style="border-radius:10px">
             <p class="login-box-msg">Faça o login no painel administrativo</p>

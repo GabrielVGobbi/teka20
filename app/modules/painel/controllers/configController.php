@@ -9,13 +9,11 @@ class ConfigController extends controller
 
         $this->user = new Users();
         $this->user->setLoggedUser();
-
-        $this->id_company = $this->user->getCompany();
-        
         if ($this->user->isLogged() == false && $this->user->isClient() == 0) {
             header("Location: " . BASE_URL_PAINEL . "login");
             exit();
         }
+        $this->id_company = $this->user->getCompany();
 
         $this->filtro = array();
         $this->cliente = new Cliente();
@@ -23,7 +21,7 @@ class ConfigController extends controller
         $this->permissions = new Permissions();
 
         $this->dataInfo = array(
-            'pageController' => 'configuracao',
+            'pageController' => 'config',
             'nome_tabela'   => 'config',
             'titlePage' => 'Configurações'
         );
@@ -34,9 +32,7 @@ class ConfigController extends controller
 
         if ($this->user->hasPermission('config_view')) {
 
-            $this->cliente->maxPerPage(10);
-
-            $this->dataInfo['tableDados'] = $this->cliente->paginate();
+            $this->dataInfo['paleta']           = $this->cliente->getPaleta($this->id_company);
 
             $this->loadView($this->dataInfo['pageController'] . "/index", $this->dataInfo);
         } else {
@@ -62,26 +58,14 @@ class ConfigController extends controller
     public function action()
     {
 
-        if (isset($_POST['cli_nome']) && $_POST['cli_nome'] != '') {
 
-            if (!isset($_POST['id'])) {
+        if (isset($_POST['type']) && $_POST['type'] == 'addCartela') {
 
-                $id_cliente = $this->cliente->add($_POST, $this->user->getCompany(), $_FILES);
+            $this->painel->addCartela($_POST, $this->user->getCompany(), $_FILES);
 
-                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
+            header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController']);
 
-                exit();
-            } else {
-
-                $this->cliente->edit($_POST, $this->user->getCompany());
-                
-
-                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController']);
-
-                exit();
-            }
-        } else {
+            exit();
         }
     }
-
 }
