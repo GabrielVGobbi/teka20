@@ -22,18 +22,18 @@ if ($tableInfo['cli_aniversario'] != '') {
 		<div class="card">
 			<div class="card-header p-2">
 				<ul class="nav nav-pills">
-					<li class="nav-item"><a class="nav-link " href="#dados" data-toggle="tab">Dados</a></li>
+					<li class="nav-item"><a class="nav-link active" href="#dados" data-toggle="tab">Dados</a></li>
 					<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
 					<?php $permissions = array();
 					foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-						<li class="nav-item"><a class="nav-link <?= $value == 'Exercício De Imagens' ? 'active' : '' ?> " href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+						<li class="nav-item"><a class="nav-link <?php #$value == 'Exercício De Imagens' ? 'active' : '' ?> " href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 					<?php endforeach; ?>
 				</ul>
 
 			</div>
 			<div class="card-body">
 				<div class="tab-content">
-					<div class="tab-pane " id="dados">
+					<div class="tab-pane active" id="dados">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="card-body box-profile">
@@ -261,8 +261,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 					</div>
 
 					<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-					<?php error_log(print_r($value,1)); ?>
-						<div class="tab-pane <?= $value == ' Exercício De Imagens' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
+						<div class="tab-pane <?php #$value == 'Exercício De Imagens' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
 							<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 						</div>
 					<?php endforeach; ?>

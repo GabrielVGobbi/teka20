@@ -4,8 +4,10 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="card-header left" style="float:right;padding:10px;display:none">
+        <div class="card-header left" style="float:right;padding:10px;display:">
             <button type="button" onclick="modoEdit(this)" data-id="modoEdit" class="btn btn-box-tool left"><i class="fa fa-plus-circle"></i> Modo Edição</button>
+            <button type="button" onclick="addPergunta()" class="btn btn-info float-right"><i class="fas fa-plus"></i> add</button>
+
         </div>
     </div>
     <div id="perguntas" style="display:">
@@ -36,7 +38,6 @@
                 </ul>
             </div>
             <div class="card-footer clearfix">
-                <button type="button" onclick="addPergunta()" class="btn btn-info float-right"><i class="fas fa-plus"></i> add</button>
             </div>
         </div>
     </div>

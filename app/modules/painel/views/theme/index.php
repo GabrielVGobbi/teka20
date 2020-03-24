@@ -47,6 +47,9 @@
               <a href="<?php echo BASE_URL_PAINEL; ?>clientes" class="nav-link">Clientes</a>
             </li>
             <li class="nav-item">
+              <a href="<?php echo BASE_URL_PAINEL; ?>calendario" class="nav-link">Encontros</a>
+            </li>
+            <li class="nav-item">
               <a href="#" class="nav-link">Relátorio</a>
             </li>
 

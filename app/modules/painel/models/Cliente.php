@@ -609,31 +609,34 @@ class Cliente extends model
 	 * @param  string 	$pasta = pasta na qual vai ser adicionado a foto 
 	 * @return boolean TRUE ou FALSE
 	 */
-	public function addPhotoExImagemClient($id_cliente, $nome_cliente, $photo, $id_company, $pasta)
+	public function addPhotoExImagemClient($id_cliente, $nome_cliente, $photo, $id_company, $pasta, $div, $id_image)
 	{
 
-		$type = explode('/', $_FILES['file']['type']);
+		$pasta = str_replace("'", '', $pasta);
+		$type = explode('/', $photo['fotos' . $pasta. $div]['type']);
 		$type = '.' . $type[1];
 
 		if (isset($photo)) {
 
-			$tipo = $photo['file']['type'];
+			$tipo = $photo['fotos' . $pasta.$div]['type'];
 
 			if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
 
 				$tmpname = (md5(time() . rand(0, 999))) . $type;
+
+
 
 				if (is_dir("app/assets/images/clientes/" . $id_cliente)) {
 					if (!is_dir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta)) {
 						mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 					}
 
-					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['fotos' . $pasta. $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				} else {
 					mkdir("app/assets/images/clientes/" . $id_cliente);
 					mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 
-					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['fotos' . $pasta. $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				}
 
 				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
@@ -659,34 +662,68 @@ class Cliente extends model
 
 				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname, 80);
 
-				$sql = $this->db->prepare("
-						INSERT INTO images SET 
-						img_url = :img_photo,
-						img_type = :type
-					");
-				$sql->bindValue(":type", $pasta);
-				$sql->bindValue(":img_photo", $tmpname);
-				$sql->execute();
-
-				$id_image = $this->db->lastInsertId();
-
-				$sql = $this->db->prepare("
-						INSERT INTO client_image SET 
-						id_client = :id_cliente,
-						img_type = :img_type,
-						id_image = :id_image,
-						id_company = :id_company
-					");
-				$sql->bindValue(":img_type", $pasta);
-				$sql->bindValue(":id_cliente", $id_cliente);
-				$sql->bindValue(":id_image", $id_image);
-				$sql->bindValue(":id_company", $id_company);
-
-				$sql->execute();
+				$this->saveImage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image);
 			}
 		} else {
 
 			error_log(print_r('erro na foto', 1));
+		}
+	}
+
+	public function saveImage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image)
+	{
+
+		if ($id_image == 0) {
+			$sql = $this->db->prepare("
+							INSERT INTO images SET 
+							img_url = :img_photo,
+							img_type = :type
+						");
+			$sql->bindValue(":type", $pasta);
+			$sql->bindValue(":img_photo", $tmpname);
+			$sql->execute();
+
+			$id_image = $this->db->lastInsertId();
+
+			$sql = $this->db->prepare("
+							INSERT INTO client_image  SET 
+							id_client = :id_cliente,
+							img_type = :img_type,
+							id_image = :id_image,
+							client_image.div = :ordem,
+							id_company = :id_company
+						");
+			$sql->bindValue(":img_type", $pasta);
+			$sql->bindValue(":id_cliente", $id_cliente);
+			$sql->bindValue(":id_image", $id_image);
+			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":ordem", $div);
+
+
+			$sql->execute();
+		} else {
+
+			$sql = $this->db->prepare("
+				SELECT * FROM client_image
+				WHERE id_cli_image = :id_cli_image LIMIT 1
+			");
+
+			$sql->bindValue(':id_cli_image', $id_image);
+			$sql->execute();
+
+			if ($sql->rowCount() == 1) {
+				$entrevista = $sql->fetch();
+				$id_image = $entrevista['id_image'];
+				$sql = $this->db->prepare("
+						UPDATE images SET
+                			img_url = :img_url		  
+						WHERE id_image = :id_image 
+					");
+				$sql->bindValue(":img_url", $tmpname);
+				$sql->bindValue(":id_image", $id_image);
+
+				$sql->execute();
+			}
 		}
 	}
 
@@ -743,18 +780,21 @@ class Cliente extends model
 		}
 		return $array;
 	}
-	public function getFotosByPasta($id_cliente, $id_company)
+	public function getFotosByPasta($id_cliente, $id_company, $pasta = '')
 	{
+
 
 		$array = array();
 		$sql = $this->db->prepare("
 			SELECT * FROM client_image cliImg
 				INNER JOIN images img ON (img.id_image = cliImg.id_image)
-			WHERE cliImg.id_company = :id_company AND cliImg.id_client = :id_cliente 
+			WHERE cliImg.id_company = :id_company AND cliImg.id_client = :id_cliente AND cliImg.img_type = :pasta ORDER BY cliImg.div 
 		");
 
 		$sql->bindValue(':id_cliente', $id_cliente);
 		$sql->bindValue(':id_company', $id_company);
+		$sql->bindValue(':pasta', $pasta);
+
 
 		$sql->execute();
 
@@ -983,8 +1023,6 @@ class Cliente extends model
 			$sql->bindValue(":id_user", $id_client);
 			$sql->bindValue(":id_company", $id_company);
 
-			
-
 			$sql->execute();
 		} else {
 
@@ -992,9 +1030,6 @@ class Cliente extends model
 				
 				clip_pergunta = :clip_pergunta
 	
-				
-
-
 				WHERE id_cli_pe = :id_cli_pe
 			
 			");
@@ -1008,13 +1043,11 @@ class Cliente extends model
 		return $id_cli_pe;
 	}
 
-	public function deletePerguntaByEntrevista($id_entrevista){
-	
+	public function deletePerguntaByEntrevista($id_entrevista)
+	{
+
 		$sql = $this->db->prepare("DELETE FROM entrevista WHERE id_entrevista = :id_entrevista");
 		$sql->bindValue(":id_entrevista", $id_entrevista);
 		return $sql->execute();
-
 	}
-
-	
 }

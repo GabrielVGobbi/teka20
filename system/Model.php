@@ -43,18 +43,12 @@ class Model
 
         if (!empty($this->table) && (is_array($columns)) && count($columns) > 0) {
             $data = array();
-
             unset($columns['type']);
-           
-
             foreach (array_keys($columns) as $value) {
                 $data[] = ":" . ($value) . "";
             }
-
-
             $sql = "INSERT INTO " . $this->table . "(" . implode(', ', array_keys($columns)) . ") VALUES (" . implode(', ', $data) . ")";
             $sql = $this->db->prepare($sql);
-            error_log(print_r($sql, 1));
             for ($i = 0; $i < count($data); $i++) {
                 $sql->bindValue($data[$i], trim(addslashes(array_values($columns)[$i])));
             }
@@ -63,9 +57,12 @@ class Model
     }
     public function insert_painel($arr, $tabela, $id_company)
     {
+
+
         $certo = true;
         $nome_tabela = $tabela;
         $parametros[] = $id_company;
+        $nome_coluna[] .= '`id_company`';
 
 
         foreach ($arr as $key => $value) {
@@ -75,9 +72,6 @@ class Model
                 continue;
             $nome_coluna[] = '`' . $key . '`';
         }
-
-        $nome_coluna[] .= '`id_company`';
-
 
         $params = implode(',', $nome_coluna);
 
@@ -93,17 +87,14 @@ class Model
             if ($nome == '')
                 continue;
 
-            $query .=  "?";
+            $query .=  "?,";
             $parametros[] .= ($value);
         }
-
-        $parametros[] .= ($id_company);
 
         $query .= ")";
 
         if ($certo == true) {
             $sql = $this->db->prepare($query);
-            error_log(print_r($sql, 1));
             if ($sql->execute($parametros)) {
                 return  $this->db->lastInsertId();
             } else {
