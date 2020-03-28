@@ -24,17 +24,15 @@ class ClientesController extends controller
         $this->permissions = new Permissions();
         $this->email = new Email();
 
-        global $config;
-
-        global $config;
+        #global $config;
 
         // Começar a integração ao Paypal
-        $apiContext = new \PayPal\Rest\ApiContext(
-            new \PayPal\Auth\OAuthTokenCredential(
-                $config['paypal_clientid'],
-                $config['paypal_secret']
-            )
-        );
+        ##$apiContext = new \PayPal\Rest\ApiContext(
+        #    new \PayPal\Auth\OAuthTokenCredential(
+        #        $config['paypal_clientid'],
+        #        $config['paypal_secret']
+        #    )
+        #);
 
 
         $this->dataInfo = array(
@@ -202,9 +200,9 @@ class ClientesController extends controller
 
     public function paypal(){
         
-        $json_file = file_get_contents("https://api.sandbox.paypal.com/v2/invoicing/invoices?total_required=true?Authorization=ENWXUPExcr0PRf22sV8oFfvgN0aCdIdH908hoNR5QsZrLmCJWIhzf92nl0e0z9RVD3xLhjLalI3cSnoF");
-        $json_str = json_decode($json_file, true);
-        error_log(print_r($json_str,1));
+        #$json_file = file_get_contents("https://api.sandbox.paypal.com/v2/invoicing/invoices?total_required=true?Authorization=ENWXUPExcr0PRf22sV8oFfvgN0aCdIdH908hoNR5QsZrLmCJWIhzf92nl0e0z9RVD3xLhjLalI3cSnoF");
+        #$json_str = json_decode($json_file, true);
+        #error_log(print_r($json_str,1));
 
     }
 }

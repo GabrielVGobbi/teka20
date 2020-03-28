@@ -38,7 +38,7 @@ class Model
      * @param  array $columns Colunas que irá receber os valores ['coluna1', 'coluna2']
      * @return boolean TRUE ou FALSE
      */
-    public function insert(array $columns, $id_company)
+    public function insert(array $columns, $id_company = 1)
     {
 
         if (!empty($this->table) && (is_array($columns)) && count($columns) > 0) {
@@ -113,6 +113,7 @@ class Model
     {
 
         if (!empty($this->table) && count($columns) > 0) {
+            error_log(print_r($columns,1));
             $update = array();
             foreach ($columns as $key => $value) {
                 $update[] = $key . ' = ' . ':' . $key;

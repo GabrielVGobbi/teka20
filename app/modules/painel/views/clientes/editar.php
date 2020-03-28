@@ -26,7 +26,8 @@ if ($tableInfo['cli_aniversario'] != '') {
 					<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
 					<?php $permissions = array();
 					foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-						<li class="nav-item"><a class="nav-link <?php #$value == 'Exercício De Imagens' ? 'active' : '' ?> " href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+						<li class="nav-item"><a class="nav-link <?php #$value == 'Exercício De Imagens' ? 'active' : '' 
+																?> " href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 					<?php endforeach; ?>
 				</ul>
 
@@ -38,7 +39,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 							<div class="col-md-3">
 								<div class="card-body box-profile">
 									<div class="btn btn-file text-center" style="display:block;">
-										<img class="profile-user-img img-fluid img-circle" name="preview" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $tableInfo['id_client']; ?>/<?php echo $tableInfo['cli_photo']; ?>" alt="User profile picture">
+										<img style="width: 80%" class="img-fluid" name="preview" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $tableInfo['id_client']; ?>/<?php echo $tableInfo['cli_photo']; ?>" alt="User profile picture">
 										<input type="file" onchange="previewImagem()" id="imagem" name="fotos" multiple="">
 
 									</div>
@@ -78,9 +79,11 @@ if ($tableInfo['cli_aniversario'] != '') {
 								<div class="card card">
 									<div class="card-header">
 										<h3 class="card-title">Próximos Encontros</h3>
+										<button type="button" id="calendar" class="btn btn-tool pull-left" data-card-widget="maximize"><i class="fas fa-expand"></i></button>
+
 									</div>
 									<div class="card-body">
-
+										<?php include_once(FRAGMENTS . 'calendario.php'); ?>
 									</div>
 								</div>
 							</div>
@@ -185,7 +188,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 															<div class="input-group-prepend">
 
 															</div>
-															<input type="text" class="form-control" name="cep" id="cep" value="<?php echo $tableInfo['cep']; ?>">
+															<input type="text" class="form-control" name="cep" id="cep" value="<?php echo $tableInfo['cep']; ?>" size="10" maxlength="9" onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-mask value="">
 														</div>
 													</div>
 													<div class="col-md-10">
@@ -198,7 +201,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 														</div>
 													</div>
 
-													<div class="col-md-4">
+													<div class="col-md-8">
 														<label for="">Bairro</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
@@ -208,7 +211,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 														</div>
 													</div>
 
-													<div class="col-md-8">
+													<div class="col-md-4">
 														<label for="">Cidade</label>
 														<div class="input-group mb-3">
 															<div class="input-group-prepend">
@@ -257,11 +260,12 @@ if ($tableInfo['cli_aniversario'] != '') {
 					</div>
 
 					<div class="tab-pane" id="entrevista">
-						<?php include_once("includes/entrevista.php"); ?>
+						<?php include_once("includes/Entrevista.php"); ?>
 					</div>
 
 					<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-						<div class="tab-pane <?php #$value == 'Exercício De Imagens' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
+						<div class="tab-pane <?php #$value == 'Exercício De Imagens' ? 'active' : '' 
+												?>" id="<?php echo str_replace(' ', '', $value); ?>">
 							<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 						</div>
 					<?php endforeach; ?>

@@ -21,7 +21,7 @@ class CalendarioController extends controller
         $this->filtro = array();
         $this->cliente = new Cliente();
         $this->painel = new Painel();
-
+        $this->calendario = new Calendario('all');
 
         $this->dataInfo = array(
             'pageController' => 'calendario',
@@ -40,6 +40,27 @@ class CalendarioController extends controller
 
             $this->loadViewErrorNotPermission();
         }
+    }
+
+    public function getCalendarioALL()
+    {
+        $filtro = isset($_REQUEST['filtro']) ? $_REQUEST['filtro'] : '';
+
+        $this->dataInfo['tableDados']  = $this->calendario->calendarioInfo ?? '';
+        
+        echo json_encode($this->dataInfo['tableDados']);
+
+        exit();
+    }
+
+    public function actionEvent(){
+        
+        if(isset($_POST['id'])){
+            $this->calendario->edit($_POST, 1);
+        } else {
+            $this->calendario->insert($_POST, 1);
+        }
+
     }
 
     

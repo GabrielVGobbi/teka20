@@ -85,11 +85,8 @@
 								</div>
 								<div class="card-footer">
 									<div class="text-left">
-										<a href="#" class="btn btn-sm bg-teal">
-											<i class="fas fa-comments"></i>
-										</a>
-										<a href="#" class="btn btn-sm btn-primary">
-											<i class="fas fa-user"></i>
+										
+										<a href="#" class="">
 										</a>
 									</div>
 								</div>

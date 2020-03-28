@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-3 col-sm-2">
     <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
-      <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#permissoes" role="tab" aria-controls="vert-tabs-home" aria-selected="true"><i style="margin-right: 5px;" class="ml-8 fas fa-user-lock"> </i>Permissões</a>
-      <a class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill" href="#pagamento" role="tab" aria-controls="vert-tabs-profile" aria-selected="false"><i style="margin-right: 5px;" class="ml-8 fas fa-credit-card"></i> Pagamento</a>
+      <a style="color:#000" class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#permissoes" role="tab" aria-controls="vert-tabs-home" aria-selected="true"><i style="margin-right: 5px;" class="ml-8 fas fa-user-lock"> </i>Permissões</a>
+      <a style="color:#000" class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill" href="#pagamento" role="tab" aria-controls="vert-tabs-profile" aria-selected="false"><i style="margin-right: 5px;" class="ml-8 fas fa-credit-card"></i> Pagamento</a>
     </div>
   </div>
   <div class="col-7 col-sm-10">
@@ -38,7 +38,7 @@
             <div class="card-header">
               <h3 class="card-title">Pagamento</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
                   <div class="row">
@@ -52,8 +52,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-12">
-                      <h4>Atividades Recentes</h4>
+                    <div class="col-12" style="max-height: 400px;overflow: auto;">
                       <div id="listVenda">
 
                       </div>
@@ -182,6 +181,7 @@
 
         if (j.tableDados != null && j.tableDados.length > 0) {
 
+          options += ' <h4> Atividades Recentes </h4>'
           for (var i = 0; i < j.tableDados.length; i++) {
             var pago = j.tableDados[i].ven_status == 0 ? 'danger">não pago' : 'success">pago';
 
@@ -223,6 +223,7 @@
           }
 
           $('#totalRecebido').html('R$ ' + formata(total));
+
           $('#listVenda').html(options).show();
 
         } else {

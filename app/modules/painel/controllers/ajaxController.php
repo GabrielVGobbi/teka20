@@ -63,9 +63,17 @@ class ajaxController extends controller
                 $name = str_replace(' - ', '_', $name);
                 $name = str_replace(' ', '_', $name);
 
-                $c->addPhotoExImagemClient($id_cliente, mb_strtolower($name, 'UTF-8'), $_FILES, $id_company, $typePasta, $div, $id_image);
+                $photo = $c->addPhotoExImagemClient($id_cliente, mb_strtolower($name, 'UTF-8'), $_FILES, $id_company, $typePasta, $div, $id_image);
             }
         }
+
+        if ($photo != false) {
+            echo json_encode($photo);
+        } else {
+            echo json_encode('');
+        }
+
+        exit;
     }
 
     public function getImagesByCliente($typePasta, $id_cliente, $nomecliente)

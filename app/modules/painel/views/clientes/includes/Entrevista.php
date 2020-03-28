@@ -1,5 +1,9 @@
 <?php $perguntas = $this->cliente->getEntrevista($tableInfo['id_company'], $tableInfo['id_client']); ?>
 
+<?php if(!$perguntas){
+    $this->cliente->setEntrevistaCliente('', $tableInfo['id_client'], $tableInfo['id_company'], false);
+} ?>
+
 
 
 <div class="row">

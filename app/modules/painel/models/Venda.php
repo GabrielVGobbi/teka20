@@ -110,6 +110,7 @@ class Venda extends Model
         if ($sql->rowCount() > 0) {
             $VendaCliente = $sql->fetchAll();
 
+
             for ($q = 0; $q < count($VendaCliente); $q++) {
 
                 $VendaCliente[$q]['ven_liquido'] = number_format($VendaCliente[$q]['ven_liquido'], 2, ',', '.');

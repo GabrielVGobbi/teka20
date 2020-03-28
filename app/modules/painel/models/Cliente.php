@@ -47,7 +47,6 @@ class Cliente extends model
 			$this->array = $sql->fetch();
 			$this->permissions->setGroup($this->array['id_client'], $id_company, true);
 			$this->array['permissions'] = $this->permissions->returnPermission();
-
 			$this->array['silhueta'] = $this->getSilhuetaClient($this->array['id_silhueta'], $id_company);
 		}
 
@@ -529,8 +528,8 @@ class Cliente extends model
 				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				$ratio = $width_orig / $height_orig;
 
-				$width = 300;
-				$height = 300;
+				$width = 1000;
+				$height = 1000;
 
 				if ($width / $height > $ratio) {
 					$width = $height * $ratio;
@@ -668,6 +667,8 @@ class Cliente extends model
 
 			error_log(print_r('erro na foto', 1));
 		}
+
+		return $id_cliente;
 	}
 
 	public function saveImage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image)
