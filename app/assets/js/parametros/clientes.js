@@ -119,6 +119,8 @@ $(function () {
         placement: 'bottom'
     });
 
+    $('.popver').webuiPopover({ trigger: 'hover' });
+
 
 });
 

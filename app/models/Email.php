@@ -294,7 +294,7 @@ class Email extends model
 
       $mail = new PHPMailer(true);
 
-      $data = date('d/m/Y', strtotime('+5 days'));
+      $data = date('d/m/Y', strtotime('+15 days'));
 
       try {
         //Server settings

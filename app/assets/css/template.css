@@ -144,6 +144,19 @@
     transition: border-color ease 0.2s;
 }
 
+a[href="#top"] {
+    padding: 10px;
+    position: fixed;
+    top: 90%;
+    right: 18px;
+    display: none;
+    font-size: 30px;
+}
+
+a[href="#top"]:hover {
+    text-decoration: none;
+}
+
 .checkbox_desgn:checked+span .icon span {
     visibility: visible;
     opacity: 1;
@@ -155,7 +168,7 @@
     left: 0;
     visibility: hidden;
     width: 100%;
-    font-size: 20px;
+    font-size: 14px;
     line-height: 1;
     text-align: center;
     opacity: 0;

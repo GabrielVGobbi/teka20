@@ -23,7 +23,6 @@ if ($tableInfo['cli_aniversario'] != '') {
 			<div class="card-header p-2">
 				<ul class="nav nav-pills">
 					<li class="nav-item"><a class="nav-link active" href="#dados" data-toggle="tab">Dados</a></li>
-					<li class="nav-item"><a class="nav-link" href="#entrevista" data-toggle="tab">Entrevista</a></li>
 					<?php $permissions = array();
 					foreach ($tableInfo['permissions'] as $perm => $value) : ?>
 						<li class="nav-item"><a class="nav-link <?php #$value == 'Exercício De Imagens' ? 'active' : '' 
@@ -178,7 +177,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 												<div class="input-group-prepend">
 													<span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
 												</div>
-												<input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?= $tableInfo['cli_telefone']; ?>" data-inputmask='"mask": "(99) 9999-99999"' data-mask>
+												<input type="text" class="form-control" name="cli_telefone_celular" id="cli_telefone_celular" value="<?= $tableInfo['cli_telefone_celular']; ?>" data-inputmask='"mask": "(99) 9999-99999"' data-mask>
 											</div>
 										</div>
 									</div>
@@ -266,9 +265,10 @@ if ($tableInfo['cli_aniversario'] != '') {
 						</div>
 					</div>
 
-					<div class="tab-pane" id="entrevista">
-						<?php include_once("includes/Entrevista.php"); ?>
-					</div>
+					<!-- <div class="tab-pane" id="entrevista">
+						<?php #include_once("includes/Entrevista.php"); 
+						?>
+					</div>-->
 
 					<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
 						<div class="tab-pane <?php #$value == 'Exercício De Imagens' ? 'active' : '' 

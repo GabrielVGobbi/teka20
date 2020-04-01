@@ -8,27 +8,41 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="card-header left" style="float:right;padding:10px;display:">
+        <div class="card-header left" style="float:left;padding:10px;display:">
             <button type="button" onclick="modoEdit(this)" data-id="modoEdit" class="btn btn-box-tool left"><i class="fa fa-plus-circle"></i> Modo Edição</button>
             <button type="button" onclick="addPergunta()" class="btn btn-info float-right"><i class="fas fa-plus"></i> add</button>
-
         </div>
+        <div id="" style="float: right;" class="btn btn-primary left submit_edit" style="float:right">Salvar</div>
+
     </div>
     <div id="perguntas" style="display:">
         <?php foreach ($perguntas as $per) : ?>
-            <div class="col-md-12 mb-3">
-                <label style="font-weight: 700;" for="<?php echo $per['clip_pergunta']; ?>"><?php echo $per['clip_pergunta']; ?></label>
-                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>][resposta_cliente]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta: "><?php echo $per['resposta']; ?></textarea>
+            <div class="col-md-12 mb-3 mt-3">
+                <label style="font-weight: 700;" for="<?= $per['clip_pergunta']; ?>"><?= $per['clip_pergunta']; ?></label>
+
+
+                <label class="popver" style="float:right" data-content="clique para sumir ou desaparecer as respostas do admin" data-placement="bottom">
+                    <input type="checkbox" class="checkbox_desgn" name="entrevista[<?= $per['id_entrevista']; ?>][anotacao]" id="anotacaoInput<?= $per['id_entrevista']; ?>" <?= $per['anotacao'] == 1 ? 'checked' : ''; ?> value="anotacao" onclick="anotation('<?= $per['id_entrevista']; ?>')">
+                    <span>
+                        <span class="icon unchecked">
+                            <span class="mdi mdi-check"></span>
+                        </span>
+                        inserir anotações
+                    </span>
+                </label>
+
+                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" id="textArea<?= $per['id_entrevista']; ?>" class="form-control" name="entrevista[<?= $per['id_entrevista']; ?>][resposta_cliente]" id="<?= $per['id_entrevista']; ?>" placeholder="Resposta: "><?= $per['resposta']; ?></textarea>
                 <div class="invalid-feedback">
                 </div>
             </div>
 
-            <div class="col-md-12 mb-3 bg-danger">
-                <label style="font-weight: 700;" for="<?php echo $per['clip_pergunta']; ?>">RESPOSTA ADMIN: <?php echo $per['clip_pergunta']; ?></label>
-                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>][resposta_admin]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta Admin: "><?php echo $per['resposta_admin']; ?></textarea>
+            <div class="col-md-12 mb-3 bg-danger" id="anotacao<?= $per['id_entrevista']; ?>" style="color: #4a4545!important;background-color: #e4001659!important;display:<?= $per['anotacao'] == 1 ? '' : 'none'; ?>">
+                <label style="font-weight: 700;" for="<?= $per['clip_pergunta']; ?>">RESPOSTA ADMIN: <?= $per['clip_pergunta']; ?></label>
+                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?= $per['id_entrevista']; ?>][resposta_admin]" id="<?= $per['id_entrevista']; ?>" placeholder="Resposta Admin: "><?= $per['resposta_admin']; ?></textarea>
                 <div class="invalid-feedback">
                 </div>
             </div>
+
         <?php endforeach; ?>
     </div>
 
@@ -131,7 +145,7 @@
         </div>
     </div>
 </form>
-
+<a href="#top" class="fas fa-angle-up"></a>
 
 <script>
     $(document).ready(function() {
@@ -147,7 +161,7 @@
                     data: {
                         id_cli_pe: id_cli_pe,
                         clip_pergunta: clip_pergunta,
-                        id_client: '<?php echo $tableInfo['id_client']; ?>',
+                        id_client: '<?= $tableInfo['id_client']; ?>',
                     },
                     type: "POST",
                     dataType: "JSON",
@@ -205,8 +219,8 @@
     function getPerguntas() {
 
         $.getJSON(BASE_URL_PAINEL + 'ajax/getPerguntas?true?search=', {
-            id_client: '<?php echo $tableInfo['id_client']; ?>',
-            id_company: '<?php echo $tableInfo['id_company']; ?>',
+            id_client: '<?= $tableInfo['id_client']; ?>',
+            id_company: '<?= $tableInfo['id_company']; ?>',
             ajax: 'true'
         }, function(j) {
             var options = '';
@@ -290,5 +304,17 @@
                 alert('Error get data from ajax');
             },
         });
+    }
+
+    function anotation(id_entrevista) {
+
+        console.log($('#anotacao' + id_entrevista).is(':checked'))
+        if ($('#anotacaoInput' + id_entrevista).is(':checked')) {
+            $('#anotacao' + id_entrevista).show();
+        } else {
+            $('#anotacao' + id_entrevista).hide();
+        }
+
+
     }
 </script>

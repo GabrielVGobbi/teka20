@@ -120,7 +120,7 @@ class Cliente extends model
 
 		//Silhueta
 		$id_silhueta = $this->setSilhuetaCliente($Parametros, $id_company);
-		
+
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
 		$cli_profissao 	 = isset($Parametros['cli_profissao']) ? controller::ReturnValor($Parametros['cli_profissao'])  : '';
@@ -338,15 +338,17 @@ class Cliente extends model
 		} else {
 
 			foreach ($Parametros as $per => $resposta) {
-				error_log(print_r($resposta, 1));
 
+				$anotacao = isset($resposta['anotacao']) ? '1' : '0';
 				if ($resposta == '')
 					continue;
 
 				$sql = $this->db->prepare("UPDATE `entrevista` SET  
 				
 					resposta = :resposta,
-					resposta_admin = :resposta_admin
+					resposta_admin = :resposta_admin,
+					anotacao = :anotacao
+
 				
 					WHERE id_entrevista = :id_entrevista
 			
@@ -354,6 +356,8 @@ class Cliente extends model
 				$sql->bindValue(":id_entrevista", $per);
 				$sql->bindValue(":resposta", $resposta['resposta_cliente']);
 				$sql->bindValue(":resposta_admin", $resposta['resposta_admin']);
+				$sql->bindValue(":anotacao", $anotacao);
+
 
 				$sql->execute();
 			}
@@ -390,17 +394,15 @@ class Cliente extends model
 
 	public function setEnderecoCliente($Parametros, $id_company, $id_endereco = false)
 	{
+		$cep = isset($Parametros['cep']) ? ($Parametros['cep'])  : '';
+		$rua = isset($Parametros['rua']) ? ($Parametros['rua'])  : '';
+		$bairro = isset($Parametros['bairro']) ? ($Parametros['bairro'])  : '';
+		$cidade = isset($Parametros['cidade']) ? ($Parametros['cidade'])  : '';
+		$numero = isset($Parametros['numero']) ? ($Parametros['numero'])  : '';
+		$estado = isset($Parametros['estado']) ? ($Parametros['estado'])  : '';
+		$complemento = isset($Parametros['complemento']) ? ($Parametros['complemento'])  : '';
 
 		if ($id_endereco == false) {
-
-
-			$cep = isset($Parametros['cep']) ? ($Parametros['cep'])  : '';
-			$rua = isset($Parametros['rua']) ? ($Parametros['rua'])  : '';
-			$bairro = isset($Parametros['bairro']) ? ($Parametros['bairro'])  : '';
-			$cidade = isset($Parametros['cidade']) ? ($Parametros['cidade'])  : '';
-			$numero = isset($Parametros['numero']) ? ($Parametros['numero'])  : '';
-			$estado = isset($Parametros['estado']) ? ($Parametros['estado'])  : '';
-			$complemento = isset($Parametros['complemento']) ? ($Parametros['complemento'])  : '';
 
 			$sql = $this->db->prepare("INSERT INTO client_endereco SET 
 				
@@ -413,12 +415,12 @@ class Cliente extends model
 				complemento = :complemento
 			
 			");
-			$sql->bindValue(":cep",    $cep    );
-			$sql->bindValue(":rua",    $rua    );
-			$sql->bindValue(":bairro", $bairro );
-			$sql->bindValue(":cidade", $cidade );
-			$sql->bindValue(":numero", $numero );
-			$sql->bindValue(":estado", $estado );
+			$sql->bindValue(":cep",    $cep);
+			$sql->bindValue(":rua",    $rua);
+			$sql->bindValue(":bairro", $bairro);
+			$sql->bindValue(":cidade", $cidade);
+			$sql->bindValue(":numero", $numero);
+			$sql->bindValue(":estado", $estado);
 			$sql->bindValue(":complemento", $complemento);
 
 			$sql->execute();
@@ -624,12 +626,12 @@ class Cliente extends model
 	{
 
 		$pasta = str_replace("'", '', $pasta);
-		$type = explode('/', $photo['fotos' . $pasta. $div]['type']);
+		$type = explode('/', $photo['fotos' . $pasta . $div]['type']);
 		$type = '.' . $type[1];
 
 		if (isset($photo)) {
 
-			$tipo = $photo['fotos' . $pasta.$div]['type'];
+			$tipo = $photo['fotos' . $pasta . $div]['type'];
 
 			if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
 
@@ -642,12 +644,12 @@ class Cliente extends model
 						mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 					}
 
-					move_uploaded_file($photo['fotos' . $pasta. $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['fotos' . $pasta . $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				} else {
 					mkdir("app/assets/images/clientes/" . $id_cliente);
 					mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 
-					move_uploaded_file($photo['fotos' . $pasta. $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['fotos' . $pasta . $div]['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				}
 
 				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
@@ -958,8 +960,6 @@ class Cliente extends model
 					: controller::alert('error', 'Ops!! deu algum erro');
 			}
 		}
-
-
 	}
 
 	public function changeStatus($id_client, $status)
@@ -1012,6 +1012,8 @@ class Cliente extends model
 			
 			");
 			$sql->bindValue(":clip_pergunta", $clip_pergunta);
+			$sql->bindValue(":clip_pergunta", $clip_pergunta);
+
 			$sql->bindValue(":id_company", $id_company);
 
 			$sql->execute();

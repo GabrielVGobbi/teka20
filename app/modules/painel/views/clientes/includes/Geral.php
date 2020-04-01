@@ -109,7 +109,7 @@
                             <div class="form-group">
                               <label>Forma Pagamento</label>
                               <select class="form-control select2  " style="width: 100%;" tabindex="-1" name="ven_forma_pagamento" id="ven_forma_pagamento" aria-hidden="true">
-                                <option selected="selected" value="cartão">cartão</option>
+                                <option selected="selected" value="transferência">transferência</option>
                                 <option value="dinheiro">dinheiro</option>
                                 <option value="paypal">paypal</option>
                               </select>
@@ -414,6 +414,8 @@
             $("#addPagamento").css('display', 'none');
             $(".submit_edit").css('display', '');
             $("#pagamentoTable").css('display', '');
+            $(".submit_edit").css('display', '');
+
             form.reset();
             getTabelaCupom();
 

@@ -18,7 +18,7 @@ class Painel extends model
 
         $type = $type == false ? '' : 'WHERE etp_type = 2';
 
-        $sql = $this->db->prepare("SELECT * FROM etapas {$type}");
+        $sql = $this->db->prepare("SELECT * FROM etapas etp {$type} ORDER BY etp.order");
         $sql->execute();
 
         if ($sql->rowCount() > 0) {
@@ -132,5 +132,20 @@ class Painel extends model
             $c = new Cliente();
             $c->AddPhotoCartela($id_cartela, $Foto, $id_company);
         }
+    }
+
+    public function getCartelaByIdCliente($id_user)
+    {
+        $cartela = '';
+        $sql = $this->db->prepare("SELECT car_nome AS cartela FROM coloracao cor INNER JOIN cartela car ON (car.id_cartela = cor.id_cartela) WHERE cor.id_user = :id_user LIMIT 1");
+        $sql->bindValue(':id_user', $id_user);
+        $sql->execute();
+
+        if ($sql->rowCount() == 1) {
+            $cartela = $sql->fetch();
+            $cartela = $cartela['cartela'];
+        }
+
+        return $cartela;
     }
 }

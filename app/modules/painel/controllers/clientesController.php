@@ -47,7 +47,7 @@ class ClientesController extends controller
 
         if ($this->user->hasPermission('clientes_view')) {
 
-            $this->cliente->maxPerPage(10);
+            $this->cliente->maxPerPage(20);
 
             $this->dataInfo['tableDados'] = $this->cliente->paginate(' WHERE id_company =' . $this->user->getCompany());
 
