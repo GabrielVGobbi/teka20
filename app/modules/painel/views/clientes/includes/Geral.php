@@ -82,36 +82,59 @@
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="card-body">
-                  <div class="card card-widget widget-user-2">
-                    <div class="widget-user-header">
-                      <div class="widget-user-image">
-                        <img class="img-circle elevation-2" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $tableInfo['id_client']; ?>/<?php echo $tableInfo['cli_photo']; ?>" alt="User Avatar">
+                <form id="formVenda" action="POST">
+                  <div class="card-body">
+                    <div class="card card-widget widget-user-2">
+                      <div class="widget-user-header">
+                        <div class="widget-user-image">
+                          <img class="img-circle elevation-2" src="<?php echo BASE_URL; ?>app/assets/images/clientes/<?php echo $tableInfo['id_client']; ?>/<?php echo $tableInfo['cli_photo']; ?>" alt="User Avatar">
+                        </div>
+                        <h3 class="widget-user-username"><?php echo $tableInfo['cli_nome']; ?></h3>
                       </div>
-                      <h3 class="widget-user-username"><?php echo $tableInfo['cli_nome']; ?></h3>
+                      <div class="card-footer pt-2">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Serviço</label>
+                              <select class="form-control select2" style="width: 100%;    height: 39px;" tabindex="-1" name="id_servico" id="id_servico" aria-hidden="true">
+                                <option selected="selected" value="0">selecione</option>
+                                <?php foreach ($this->painel->getEtapas(true) as $etp) : ?>
+                                  <option data-price="<?= $etp['etp_price']; ?>" value="<?= $etp['id_etapa']; ?>"><?= $etp['etp_nome']; ?></option>
+                                <?php endforeach; ?>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label>Forma Pagamento</label>
+                              <select class="form-control select2  " style="width: 100%;" tabindex="-1" name="ven_forma_pagamento" id="ven_forma_pagamento" aria-hidden="true">
+                                <option selected="selected" value="cartão">cartão</option>
+                                <option value="dinheiro">dinheiro</option>
+                                <option value="paypal">paypal</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="col-2 col-sm-2">
+                            <div class="form-group">
+                              <label for="">Condição</label>
+                              <select class="form-control select2" style="width: 100%;    height: 39px;" tabindex="-1" name="ven_condicao" id="ven_condicao" aria-hidden="true">
+                                <option selected="selected" value="0">0x</option>
+                                <?php for ($i = 1; $i < 13; $i++) : ?>
+                                  <option value="<?= $i; ?>"><?= $i; ?> X</option>
+                                <?php endfor; ?>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                  </div>
-                  <form id="formVenda" action="POST">
                     <input type="hidden" name="id_cliente" id="id_cliente" value="<?php echo $tableInfo['id_client']; ?>" />
+                    <input type="hidden" name="id_venda" id="id_venda" value="" />
+
                     <div class="row">
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label>Forma Pagamento</label>
-                          <select class="form-control  " style="width: 100%;" tabindex="-1" name="ven_forma_pagamento" id="ven_forma_pagamento" aria-hidden="true">
-                            <option selected="selected" value="cartão">Cartão</option>
-                            <option value="dinheiro">Dinheiro</option>
-
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="col-2 col-sm-2">
-                        <div class="form-group">
-                          <label for="">Condição</label>
-                          <input type="text" class="form-control" id="ven_condicao" name="ven_condicao" placeholder="3x">
-                        </div>
-                      </div>
 
                       <div class="col-2 col-sm-2">
                         <div class="form-group">
@@ -141,12 +164,20 @@
                           <input type="text" class="form-control" id="ven_data" name="ven_data" placeholder="" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
                         </div>
                       </div>
+
+                      <div class="col-2 col-sm-2" id="taxDIV" style="display:none">
+                        <div class="form-group">
+                          <label for="">Taxa </label>
+                          <input type="text" class="form-control" id="ven_taxa" name="ven_taxa">
+                        </div>
+                      </div>
                     </div>
                     <a id="save" href="javascript:void(0);" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i> Salvar</a>
                     <a id="cancel" href="javascript:void(0);" class="link-black text-sm mr-2"><i class="fas fa-times mr-1"></i> Cancelar</a>
-                  </form>
+                    <a id="delete" style="float:right;display:none" onclick="deleteVenda()" href="javascript:void(0);" class="link-black text-sm mr-2"><i class="fas fa-trash mr-1"></i> Deletar</a>
 
-                </div>
+                </form>
+
               </div>
             </div>
           </div>
@@ -154,188 +185,298 @@
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    $(document).ready(function() {
-      getTabelaCupom();
-    });
+<script>
+  $(document).ready(function() {
+    getTabelaCupom();
+  });
 
-    $('#table_search').keyup(function() {
-      getTabelaCupom();
-    });
+  $('#table_search').keyup(function() {
+    getTabelaCupom();
+  });
 
-    function getTabelaCupom() {
+  function getTabelaCupom() {
 
-      var table_search = $('#table_search').val();
-      var nomeCliente = $('#cli_nome').val();
-      $.getJSON(BASE_URL_PAINEL + 'vendas/getVendaByCliente/', {
-        data: '<?php echo json_encode($_GET); ?>',
-        id_cliente: '<?= $tableInfo['id_client']; ?>',
-        filtro: {
-          all: table_search,
-        },
-        ajax: 'true'
-      }, function(j) {
-        var options = '';
-        var total = 0;
+    var table_search = $('#table_search').val();
+    var nomeCliente = $('#cli_nome').val();
+    $.getJSON(BASE_URL_PAINEL + 'vendas/getVendaByCliente/', {
+      data: '<?php echo json_encode($_GET); ?>',
+      id_cliente: '<?= $tableInfo['id_client']; ?>',
+      filtro: {
+        all: table_search,
+      },
+      ajax: 'true'
+    }, function(j) {
+      var options = '';
+      var total = 0;
 
-        if (j.tableDados != null && j.tableDados.length > 0) {
+      if (j.tableDados != null && j.tableDados.length > 0) {
 
-          options += ' <h4> Atividades Recentes </h4>'
-          for (var i = 0; i < j.tableDados.length; i++) {
-            var pago = j.tableDados[i].ven_status == 0 ? 'danger">não pago' : 'success">pago';
+        options += ' <h4> Atividades Recentes </h4>'
+        for (var i = 0; i < j.tableDados.length; i++) {
+          var pago = j.tableDados[i].ven_status == 0 ? 'danger">não pago' : 'success">pago';
 
-            valor = j.tableDados[i].ven_liquido.replace('.', "");
-            valor = valor.replace(',', ".");
+          valor = j.tableDados[i].ven_liquido.replace('.', "");
+          valor = valor.replace(',', ".");
 
-            total += parseFloat(valor);
+          total += parseFloat(valor);
 
-            options += '<div class="post">'
-            options += '  <div class="row" style="margin-top:20px">'
-            options += '    <div class="col-md-2 text-center">'
-            options += '      <div class="col-12 col-sm-12">'
-            options += '        <dl>'
-            options += '        <dt style="font-size: 16px;"> ' + j.tableDados[i].dia + '</dt>'
-            options += '        <dd>' + j.tableDados[i].mes + '</dd>'
-            options += '        </dl>'
-            options += '      </div>'
-            options += '    </div>'
-            options += '  <div class="col-md-8">'
-            options += '    <div class="col-12 col-sm-12">'
-            options += '      <dl>'
-            options += '      <dt style="font-size: 16px;">' + nomeCliente + '</dt>'
-            options += '      <dd>Pagamento feito em ' + j.tableDados[i].ven_forma_pagamento + ' <span style="    cursor: pointer;" onclick="pagToVenda(' + j.tableDados[i].id_venda + ',' + j.tableDados[i].ven_status + ')" data-toggle="tooltip" data-placement="top" title="Tooltip on top" class="badge bg-' + pago + '</span></dd>'
-            options += '      </dl>'
-            options += '    </div>'
-            options += '  </div>'
-            options += '  <div class="col-md-2">'
-            options += '    <div class="col-12 col-sm-12">'
-            options += '      <dl>'
-            options += '      <dt style="font-size: 16px;">R$ </dt>'
-            options += '      <dd>' + j.tableDados[i].ven_liquido + '</dd>'
-            options += '      </dl>'
-            options += '    </div>'
-            options += '    <a href="#"><i class="fas fa-arrow-right " style="float:right"></i></a>'
-            options += '  </div>'
-            options += '  </div>'
-            options += '</div>'
+          options += '<div class="post">'
+          options += '  <div class="row" style="margin-top:20px">'
+          options += '    <div class="col-md-2 text-center">'
+          options += '      <div class="col-12 col-sm-12">'
+          options += '        <dl>'
+          options += '        <dt style="font-size: 16px;"> ' + j.tableDados[i].dia + '</dt>'
+          options += '        <dd>' + j.tableDados[i].mes + '</dd>'
+          options += '        </dl>'
+          options += '      </div>'
+          options += '    </div>'
+          options += '  <div class="col-md-8">'
+          options += '    <div class="col-12 col-sm-12">'
+          options += '      <dl>'
+          options += '      <dt style="font-size: 16px;">' + nomeCliente + '</dt>'
+          options += '      <dd>Pagamento feito em ' + j.tableDados[i].ven_forma_pagamento + ' <span style="    cursor: pointer;" onclick="pagToVenda(' + j.tableDados[i].id_venda + ',' + j.tableDados[i].ven_status + ')" data-toggle="tooltip" data-placement="top" title="Tooltip on top" class="badge bg-' + pago + '</span></dd>'
+          options += '      </dl>'
+          options += '    </div>'
+          options += '  </div>'
+          options += '  <div class="col-md-2">'
+          options += '    <div class="col-12 col-sm-12">'
+          options += '      <dl>'
+          options += '      <dt style="font-size: 16px;">R$ </dt>'
+          options += '      <dd>' + j.tableDados[i].ven_liquido + '</dd>'
+          options += '      </dl>'
+          options += '    </div>'
+          options += '    <a href="javascript:void(0);" onclick="editVenda(' + j.tableDados[i].id_venda + ')"><i class="fas fa-arrow-right " style="float:right"></i></a>'
+          options += '  </div>'
+          options += '  </div>'
+          options += '</div>'
 
-          }
-
-          $('#totalRecebido').html('R$ ' + formata(total));
-
-          $('#listVenda').html(options).show();
-
-        } else {
-
-          $('#listVenda').html(options).show();
         }
 
+        $('#totalRecebido').html('R$ ' + formata(total));
 
-      });
+        $('#listVenda').html(options).show();
 
-    };
+      } else {
+        $('#totalRecebido').html('R$ 0,00');
 
-    function pagToVenda(id_venda, status) {
+        $('#listVenda').html(options).show();
+      }
 
-      status = status == 1 ? '0' : '1';
+
+    });
+
+  };
+
+  function pagToVenda(id_venda, status) {
+
+    status = status == 1 ? '0' : '1';
+
+    $.ajax({
+      url: BASE_URL_PAINEL + 'vendas/PagToVenda',
+      type: 'POST',
+      data: {
+        id_venda: id_venda,
+        status: status
+      },
+
+      dataType: 'json',
+      success: function(json) {
+        if (json) {
+          status == 1 ? toastr.success('Pago com Sucesso') : toastr.error('não Pago');
+
+
+          getTabelaCupom();
+
+        }
+      },
+    });
+  }
+
+  $('#ven_valor_bruto, #ven_desconto').on("input", function() {
+
+    var total = $('#ven_valor_bruto').val();
+    var negociado = $('#ven_desconto').val();
+
+    if (negociado == undefined) {
+      negociado = '0'
+    }
+
+    total = total - negociado
+
+    $('#ven_liquido').val(total);
+
+  });
+
+  function formata(v) {
+
+    return parseFloat(v).toLocaleString("pt-BR", {
+      minimumFractionDigits: 2
+    });
+  }
+
+  $('#addPagamentoButton').on("click", function() {
+    $('#formVenda')[0].reset();
+    $('#id_servico').val('0').trigger('change');
+    $("#delete").hide();
+    $('#id_servico').val('0').trigger('change');
+    $('#ven_forma_pagamento').val('cartão').trigger('change');
+    $("#addPagamento").css('display', '');
+    $("#pagamentoTable").css('display', 'none');
+    $(".submit_edit").css('display', 'none');
+    $("#id_venda").val('');
+
+  });
+  $('#cancel').on("click", function() {
+    $("#addPagamento").css('display', 'none');
+    $("#pagamentoTable").css('display', '');
+    $(".submit_edit").css('display', '');
+  });
+
+  $('#id_servico').on("change", function() {
+    var titulo = $(this).select2('data');
+    if ($('#id_venda').val() == '') {
+      var price = titulo[0].element.attributes[0].value;
+      $('#ven_valor_bruto').val(price)
+    }
+  });
+
+  $('#ven_condicao').on("change", function() {
+    var titulo = $("#ven_forma_pagamento option:selected").text();
+    var condicao = $("#ven_condicao option:selected").text();
+
+    var taxa = 0;
+    if (titulo == 'paypal') {
+      switch (condicao) {
+        case '1 X':
+        case '2 X':
+        case '3 X':
+          taxa = '5%'
+          break;
+        case '4 X':
+        case '5 X':
+        case '6 X':
+          taxa = '7%'
+          break;
+        case '7 X':
+        case '8 X':
+        case '9 X':
+          taxa = '8%'
+          break;
+        case '10 X':
+        case '11 X':
+        case '12 X':
+          taxa = '9%'
+          break;
+        default:
+          break;
+      }
+      $('#taxDIV').css('display', '');
+      $('#ven_taxa').val(taxa);
+    }
+  });
+
+  $('#save').on("click", function() {
+
+    $("#ven_valor_bruto").val().length != '' ?
+      $("#ven_valor_bruto").removeClass("is-invalid") :
+      $("#ven_valor_bruto").addClass("is-invalid") + toastr.error('Valor Bruto é obrigatorio')
+
+    $("#ven_data").val().length != '' ?
+      $("#ven_data").removeClass("is-invalid") :
+      $("#ven_data").addClass("is-invalid") + toastr.error('Data é obrigatori(a)')
+
+    submit();
+
+  });
+
+  function submit() {
+
+    event.preventDefault();
+    var form = $('#formVenda')[0];
+    var formData = new FormData(form);
+
+    if (!$(".form-control").hasClass("is-invalid") && !$(".form-control").hasClass("has-error")) {
 
       $.ajax({
-        url: BASE_URL_PAINEL + 'vendas/PagToVenda',
-        type: 'POST',
-        data: {
-          id_venda: id_venda,
-          status: status
-        },
 
+        url: BASE_URL_PAINEL + 'vendas/actionVenda',
+        type: 'POST',
+        data: formData,
         dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
         success: function(json) {
           if (json) {
-            status == 1 ? toastr.success('Pago com Sucesso') : toastr.error('não Pago');
-
-
+            toastr.success('Adicionado com Sucesso');
+            $("#addPagamento").css('display', 'none');
+            $(".submit_edit").css('display', '');
+            $("#pagamentoTable").css('display', '');
+            form.reset();
             getTabelaCupom();
 
           }
         },
       });
     }
+  }
 
-    $('#ven_valor_bruto, #ven_desconto').on("input", function() {
+  function editVenda(id_venda) {
+    save_method = 'update';
+    $('#formVenda')[0].reset();
 
-      var total = $('#ven_valor_bruto').val();
-      var negociado = $('#ven_desconto').val();
+    $("#delete").show();
 
-      if (negociado == undefined) {
-        negociado = '0'
-      }
+    $("#addPagamento").css('display', '');
+    $("#pagamentoTable").css('display', 'none');
 
-      total = total - negociado
+    $.ajax({
+      url: BASE_URL_PAINEL + 'vendas/getVendaById/' + id_venda,
+      type: "GET",
+      dataType: "JSON",
+      success: function(data) {
 
-      $('#ven_liquido').val(total);
+        $('[name="id_venda"]').val(data.id_venda);
+        $('[name="ven_data"]').val(data.ven_data);
+        $('[name="ven_valor_bruto"]').val(data.ven_valor_bruto);
+        $('[name="ven_forma_pagamento"]').val(data.ven_forma_pagamento);
+        $('[name="ven_desconto"]').val(data.ven_desconto);
+        $('[name="ven_liquido"]').val(data.ven_liquido);
+        $('#ven_condicao').val(data.ven_condicao).trigger('change');
 
+        if ($("#ven_forma_pagamento option:selected").text() == 'paypal') {
+          $('[name="ven_taxa"]').val(data.ven_taxa);
+          $('#taxDIV').show();
+        }
+
+        $('#id_servico').val(data.id_servico).trigger('change');
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      },
     });
+  }
 
-    function formata(v) {
+  function deleteVenda() {
+    var id_venda = $('[name="id_venda"]').val();
 
-      return parseFloat(v).toLocaleString("pt-BR", {
-        minimumFractionDigits: 2
-      });
-    }
-
-    $('#addPagamentoButton').on("click", function() {
-      $("#addPagamento").css('display', '');
-      $("#pagamentoTable").css('display', 'none');
-      $(".submit_edit").css('display', 'none');
+    $.ajax({
+      url: BASE_URL_PAINEL + 'vendas/deleteVendaById/' + id_venda,
+      type: "GET",
+      dataType: "JSON",
+      success: function(data) {
+        if (data == true)
+          $("#addPagamento").css('display', 'none');
+        $("#pagamentoTable").css('display', '');
+        getTabelaCupom()
+        toastr.success('deletado');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      },
     });
-    $('#cancel').on("click", function() {
-      $("#addPagamento").css('display', 'none');
-      $("#pagamentoTable").css('display', '');
-      $(".submit_edit").css('display', '');
-    });
-    $('#save').on("click", function() {
-
-      $("#ven_valor_bruto").val().length != '' ?
-        $("#ven_valor_bruto").removeClass("is-invalid") :
-        $("#ven_valor_bruto").addClass("is-invalid") + toastr.error('Valor Bruto é obrigatorio')
-
-      $("#ven_data").val().length != '' ?
-        $("#ven_data").removeClass("is-invalid") :
-        $("#ven_data").addClass("is-invalid") + toastr.error('Data é obrigatori(a)')
-
-      submit();
-
-    });
-
-    function submit() {
-
-      event.preventDefault();
-      var form = $('#formVenda')[0]; // You need to use standard javascript object here
-      var formData = new FormData(form);
-
-      if (!$(".form-control").hasClass("is-invalid") && !$(".form-control").hasClass("has-error")) {
-
-        $.ajax({
-
-          url: BASE_URL_PAINEL + 'vendas/addVenda',
-          type: 'POST',
-          data: formData,
-          dataType: 'json',
-          processData: false,
-          contentType: false,
-          cache: false,
-          success: function(json) {
-            if (json) {
-              toastr.success('Adicionado com Sucesso');
-              $("#addPagamento").css('display', 'none');
-              $(".submit_edit").css('display', '');
-              $("#pagamentoTable").css('display', '');
-              form.reset();
-              getTabelaCupom();
-
-            }
-          },
-        });
-      }
-    }
-  </script>
+  }
+</script>

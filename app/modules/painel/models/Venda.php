@@ -131,22 +131,29 @@ class Venda extends Model
         return $VendaCliente;
     }
 
-    public function add($Parametros,$id_company)
+    public function actionVenda($Parametros,$id_company)
     {
+        error_log(print_r($Parametros, 1));
+
         $id_cliente = $Parametros['id_cliente'];
+        $id_venda = $Parametros['id_venda'];
         unset($Parametros['id_cliente']);
 
         $data = str_replace("/", "-", $Parametros['ven_data']);
         $data = date('Y-m-d', strtotime($data));
+        unset($Parametros['ven_data']);
 
         $Parametros += [
             'id_company' => $id_company,
             'ven_data' => $data
         ];
 
-        $id_venda = $this->insert($Parametros, $this->table);
-
-        $this->setClientVenda($id_cliente, $id_venda);
+        if(isset($Parametros['id_venda']) && !empty($Parametros['id_venda']) ){
+            $this->update($Parametros, $where = ['id_venda' => $Parametros['id_venda']]);
+        } else {
+            $id_venda = $this->insert($Parametros, $this->table);
+            $this->setClientVenda($id_cliente, $id_venda);
+        }
 
         return $id_venda;
     }
@@ -178,6 +185,32 @@ class Venda extends Model
         
     }
 
+    public function getVendaById($id_venda)
+    {
+
+        $vendaArray = array();
+        $sql = "SELECT * FROM venda ven WHERE id_venda = :id_venda LIMIT 1";
+
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(':id_venda', $id_venda);
+        $sql->execute();
+
+        if ($sql->rowCount() == 1) {
+            $vendaArray = $sql->fetch();
+            $vendaArray['ven_data'] = str_replace("-", "/", $vendaArray['ven_data']);
+            $vendaArray['ven_data'] = date('d/m/Y H:i:s', strtotime($vendaArray['ven_data']));
+        }
+
+        return $vendaArray;
+    }
+
+    public function deleteVendaById($id_venda){
+
+        $sql = $this->db->prepare("DELETE FROM venda WHERE id_venda = :id_venda ");
+        $sql->bindValue(":id_venda", $id_venda);
+        return $sql->execute() ? true : false;
+
+    }
 
 
 }

@@ -24,8 +24,10 @@
                                             <b>Tipo</b>
                                             <a class="float-right">
                                                 <select class="form-control select2" id="typeClient" name="typeClient" data-placeholder="Selecione">
-                                                    <option value="0">cliente</option>
-                                                    <option value="1">possivel cliente</option>
+                                                    <option value="Consultoria Completa">Consultoria Completa</option>
+                                                    <option value="Consultoria Pocket ">Consultoria Pocket </option>
+                                                    <option value="Coloração Pessoal">Coloração Pessoal</option>
+                                                    <option value="Possível Cliente">Possível Cliente</option>
                                                 </select>
                                             </a>
                                         </li>
@@ -83,7 +85,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" name="cli_aniversario" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false" >
+                                                <input type="text" class="form-control" name="cli_aniversario" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" im-insert="false">
                                             </div>
                                         </div>
 
@@ -116,7 +118,7 @@
                                                 <div class="row">
                                                     <div class="col-md-3">
                                                         <label for="">Cep</label>
-                                                        <div class="input-group mb-3" >
+                                                        <div class="input-group mb-3">
                                                             <div class="input-group-prepend"></div>
                                                             <input type="text" class="form-control" name="cep" id="cep" size="10" maxlength="9" onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-mask value="">
                                                         </div>

@@ -1,6 +1,6 @@
 <?php $perguntas = $this->cliente->getEntrevista($tableInfo['id_company'], $tableInfo['id_client']); ?>
 
-<?php if(!$perguntas){
+<?php if (!$perguntas) {
     $this->cliente->setEntrevistaCliente('', $tableInfo['id_client'], $tableInfo['id_company'], false);
 } ?>
 
@@ -18,7 +18,14 @@
         <?php foreach ($perguntas as $per) : ?>
             <div class="col-md-12 mb-3">
                 <label style="font-weight: 700;" for="<?php echo $per['clip_pergunta']; ?>"><?php echo $per['clip_pergunta']; ?></label>
-                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta: "><?php echo $per['resposta']; ?></textarea>
+                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>][resposta_cliente]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta: "><?php echo $per['resposta']; ?></textarea>
+                <div class="invalid-feedback">
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3 bg-danger">
+                <label style="font-weight: 700;" for="<?php echo $per['clip_pergunta']; ?>">RESPOSTA ADMIN: <?php echo $per['clip_pergunta']; ?></label>
+                <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?php echo $per['id_entrevista']; ?>][resposta_admin]" id="<?php echo $per['id_entrevista']; ?>" placeholder="Resposta Admin: "><?php echo $per['resposta_admin']; ?></textarea>
                 <div class="invalid-feedback">
                 </div>
             </div>

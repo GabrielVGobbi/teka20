@@ -6,7 +6,7 @@
 	use PHPMailer\PHPMailer\Exception;
 	
 
-class Email extends Model {
+class Email extends model {
 
 	public function enviarEmail($Parametros){
 
@@ -58,6 +58,8 @@ class Email extends Model {
 			echo 'erro';
 		}
 	}
+
+
 
 	public function notifyEmailClient($id_cliente, $id_company){
 

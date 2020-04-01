@@ -55,8 +55,6 @@ class Painel extends model
             $this->retorno = $sql->fetchAll();
         }
 
-        #error_log(print_r($this->retorno,1));
-
         return $this->retorno;
     }
     public function getFoto($id_cliente, $foto)

@@ -113,7 +113,6 @@ class Model
     {
 
         if (!empty($this->table) && count($columns) > 0) {
-            error_log(print_r($columns,1));
             $update = array();
             foreach ($columns as $key => $value) {
                 $update[] = $key . ' = ' . ':' . $key;

@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 
 
 
-class Email extends Model
+class Email extends model
 {
 
 	public function enviarEmail($Parametros)
@@ -279,5 +279,49 @@ class Email extends Model
 			echo 'erro';
 		}
 
-	}
+  }
+
+  public function newDossie($id_cliente, $id_company)
+  {
+
+    if (isset($id_cliente)) {
+
+      $c = new Cliente();
+
+      $cliente = $c->getClienteByIdName($id_cliente, $id_company);
+
+      $nomeCliente = $cliente['cli_nome'];
+
+      $mail = new PHPMailer(true);
+
+      $data = date('d/m/Y', strtotime('+5 days'));
+
+      try {
+        //Server settings
+        $mail->SMTPDebug = 0;                      // Enable verbose debug output
+        $mail->isSMTP();                                            // Send using SMTP
+        $mail->Host       = 'p3plcpnl0703.prod.phx3.secureserver.net';                    // Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+        $mail->Username   = 'contato@landsolucoes.com.br';                     // SMTP username
+        $mail->Password   = 'hLgSO6;&V@{Y';                               // SMTP password
+        $mail->SMTPSecure = 'ssl';         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+        $mail->Port       = 465;                                    // TCP port to connect to
+
+        //Recipients
+        $mail->setFrom('oi@stephanivarella.com', 'AdminStyle');
+        $mail->addAddress('oi@stephanivarella.com', 'Sistema');
+        #$mail->addAddress('oi@stephanivarella.com', $Parametros['nome']);     
+
+        // Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Lembrete';
+        $mail->Body    = ' Lembrete para criar o dossiê da cliente "' . $nomeCliente . '" Até "' . $data . '"';
+        $mail->send();
+      } catch (Exception $e) {
+        error_log(print_r("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 1));
+      }
+    } else {
+      echo 'erro';
+    }
+  }
 }

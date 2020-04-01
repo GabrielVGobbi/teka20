@@ -1,6 +1,6 @@
 <?php
 
-class VendasController extends Controller
+class VendasController extends controller
 {
 
     public function __construct()
@@ -87,10 +87,12 @@ class VendasController extends Controller
         exit();
     }
 
-    public function addVenda()
+    public function actionVenda()
     {
 
-        $id_cupom = $this->venda->add($_POST, $this->user->getCompany());
+        $id_cliente = $_POST['id_cliente'];
+        if($id_cliente)
+            $id_cupom = $this->venda->actionVenda($_POST, $this->user->getCompany());
   
         echo json_encode($id_cupom);
 
@@ -99,13 +101,28 @@ class VendasController extends Controller
 
     public function PagToVenda(){
 
-        error_log(print_r($_REQUEST,1));
-        error_log(print_r($_POST, 1));
-
-        
         $return = $this->venda->PagToVenda($_REQUEST['id_venda'], $_REQUEST['status']);
   
         echo json_encode($return);
+
+        exit();
+    }
+
+    public function getVendaById($id_venda)
+    {
+        $venda  = $this->venda->getVendaById($id_venda);
+
+        echo json_encode($venda);
+
+        exit();
+    }
+
+    public function deleteVendaById($id_venda)
+    {
+
+        $venda  = $this->venda->deleteVendaById($id_venda);
+error_log(print_r($venda,1));
+        echo $venda ? json_encode($venda) : false;
 
         exit();
     }

@@ -12,6 +12,8 @@ class Cliente extends model
 		parent::__construct();
 		$this->array = array();
 		$this->retorno = array();
+
+		$this->email = new Email();
 	}
 
 	public function getCount($id_company)
@@ -31,6 +33,7 @@ class Cliente extends model
 
 	public function getInfo($id_cliente, $id_company)
 	{
+
 		$sql = $this->db->prepare("SELECT * FROM client cli 
 			INNER JOIN client_endereco clie ON (clie.id_endereco = cli.id_address)
 			INNER JOIN users user ON (user.id_cliente = cli.id_client)
@@ -110,7 +113,6 @@ class Cliente extends model
 
 	public function add($Parametros, $id_company, $file)
 	{
-
 		//Endereço
 		$id_endereco   = $this->setEnderecoCliente($Parametros, $id_company);
 
@@ -118,8 +120,7 @@ class Cliente extends model
 
 		//Silhueta
 		$id_silhueta = $this->setSilhuetaCliente($Parametros, $id_company);
-
-
+		
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
 		$cli_profissao 	 = isset($Parametros['cli_profissao']) ? controller::ReturnValor($Parametros['cli_profissao'])  : '';
@@ -129,7 +130,7 @@ class Cliente extends model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
 
-		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : '0';
+		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : 'Possivel Cliente';
 
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
@@ -225,7 +226,6 @@ class Cliente extends model
 		//Entrevista
 		//$id_entrevista = $this->setEntrevistaCliente($Parametros['entrevista'], $id_company, $Parametros['id_entrevista']);
 
-
 		//Silhueta
 		if ($Parametros['silhueta'])
 			$id_silhueta = $this->setSilhuetaCliente($Parametros['silhueta'], $id_company, $Parametros['id_silhueta']);
@@ -316,7 +316,6 @@ class Cliente extends model
 	public function setEntrevistaCliente($Parametros, $id_client, $id_company, $cadastro = false)
 	{
 
-
 		if ($cadastro == false) {
 
 			$painel = new Painel();
@@ -339,18 +338,23 @@ class Cliente extends model
 		} else {
 
 			foreach ($Parametros as $per => $resposta) {
+				error_log(print_r($resposta, 1));
+
 				if ($resposta == '')
 					continue;
 
 				$sql = $this->db->prepare("UPDATE `entrevista` SET  
 				
-					resposta = :resposta
+					resposta = :resposta,
+					resposta_admin = :resposta_admin
 				
 					WHERE id_entrevista = :id_entrevista
 			
 				");
 				$sql->bindValue(":id_entrevista", $per);
-				$sql->bindValue(":resposta", $resposta);
+				$sql->bindValue(":resposta", $resposta['resposta_cliente']);
+				$sql->bindValue(":resposta_admin", $resposta['resposta_admin']);
+
 				$sql->execute();
 			}
 		}
@@ -939,11 +943,15 @@ class Cliente extends model
 				$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
 				$sql->bindValue(":id_cliente", $id_cliente);
 
+				$this->email->newDossie($id_cliente, $id_company);
+
 				return $sql->execute()
 					? controller::alert('success', 'Editado com sucesso')
 					: controller::alert('error', 'Ops!! deu algum erro');
 			}
 		}
+
+
 	}
 
 	public function changeStatus($id_client, $status)
