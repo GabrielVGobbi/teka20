@@ -36,8 +36,8 @@
                 </div>
             </div>
 
-            <div class="col-md-12 mb-3 bg-danger" id="anotacao<?= $per['id_entrevista']; ?>" style="color: #4a4545!important;background-color: #e4001659!important;display:<?= $per['anotacao'] == 1 ? '' : 'none'; ?>">
-                <label style="font-weight: 700;" for="<?= $per['clip_pergunta']; ?>">RESPOSTA ADMIN: <?= $per['clip_pergunta']; ?></label>
+            <div class="col-md-12 mb-3" id="anotacao<?= $per['id_entrevista']; ?>" style="display:<?= $per['anotacao'] == 1 ? '' : 'none'; ?>">
+                <label style="font-weight: 700;" for="">insira aqui suas anotações</label>
                 <textarea style="margin-top: 0px; margin-bottom: 0px; height: 106px;" type="text" class="form-control" name="entrevista[<?= $per['id_entrevista']; ?>][resposta_admin]" id="<?= $per['id_entrevista']; ?>" placeholder="Resposta Admin: "><?= $per['resposta_admin']; ?></textarea>
                 <div class="invalid-feedback">
                 </div>
