@@ -69,10 +69,11 @@ if ($tableInfo['cli_aniversario'] != '') {
 											<b>Tipo</b>
 											<a class="float-right">
 												<select class="form-control select2" id="typeClient" name="typeClient" data-placeholder="Selecione">
+													<option <?= $tableInfo['cli_tipo'] == '' ? 'selected' : ''; ?> value="Definir">Definir</option>
 													<option <?= $tableInfo['cli_tipo'] == 'Consultoria Completa' ? 'selected' : ''; ?> value="Consultoria Completa">Consultoria Completa</option>
 													<option <?= $tableInfo['cli_tipo'] == 'Consultoria Pocket' ? 'selected' : ''; ?> value="Consultoria Pocket">Consultoria Pocket</option>
 													<option <?= $tableInfo['cli_tipo'] == 'Coloração Pessoal' ? 'selected' : ''; ?> value="Coloração Pessoal">Coloração Pessoal</option>
-													<option <?= $tableInfo['cli_tipo'] == 'Possível Cliente' ? 'selected' : ''; ?> value="Possível Cliente">Possível Clientee</option>
+													<option <?= $tableInfo['cli_tipo'] == 'Possível Cliente' ? 'selected' : ''; ?> value="Possível Cliente">Possível Cliente</option>
 												</select>
 											</a>
 										</li>

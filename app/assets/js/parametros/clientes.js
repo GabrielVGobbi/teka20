@@ -96,7 +96,7 @@ $(function () {
 
 
     function submit() {
-        if (!$(".form-control").hasClass("has-warning") && !$(".form-control").hasClass("is-invalid"))
+        //if (!$(".form-control").hasClass("has-warning") && !$(".form-control").hasClass("is-invalid"))
             $("#client_form").submit();
     }
 

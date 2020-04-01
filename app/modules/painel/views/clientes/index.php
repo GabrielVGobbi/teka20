@@ -72,7 +72,7 @@
 									<div class="row">
 										<div class="col-7">
 											<h2 class="lead"><b><?php echo ucfirst($dd['cli_nome']) . ' ' . ucfirst($dd['cli_sobrenome']); ?></b></h2>
-											<p class="text-muted text-sm"><b>Sobre: </b> <?php echo $dd['cli_tipo']; ?> </p>
+											<p class="text-muted text-sm"><b></b> <?php echo $dd['cli_tipo']; ?> </p>
 											<ul class="ml-4 mb-0 fa-ul text-muted">
 												<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> <?php echo $dd['cli_nome'] ?></li>
 												<li class="small pt-2"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> <?php echo $dd['cli_telefone'] ?></li>
