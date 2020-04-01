@@ -77,19 +77,18 @@ $(function () {
         var email = $('#cli_email').val();
         var cep = $('#cep').val();
 
-
-        nome.length != ''
-            ? $("#cli_nome").removeClass("is-invalid") 
-            : $("#cli_nome").addClass("is-invalid") + toastr.error('Nome é Obrigatorio')
-        
-        email.length != ''
-            ? $("#cli_email").removeClass("is-invalid") 
-            : $("#cli_email").addClass("is-invalid") + toastr.error('Email é Obrigatorio')
-
-        cep.length != ''
-            ? $("#cep").removeClass("is-invalid") 
-            : $("#cep").addClass("is-invalid") + toastr.error('Cep é Obrigatorio')
-
+        //nome.length != ''
+        //    ? $("#cli_nome").removeClass("is-invalid") 
+        //    : $("#cli_nome").addClass("is-invalid") + toastr.error('Nome é Obrigatorio')
+        //
+        //email.length != ''
+        //    ? $("#cli_email").removeClass("is-invalid") 
+        //    : $("#cli_email").addClass("is-invalid") + toastr.error('Email é Obrigatorio')
+//
+        //cep.length != ''
+        //    ? $("#cep").removeClass("is-invalid") 
+        //    : $("#cep").addClass("is-invalid") + toastr.error('Cep é Obrigatorio')
+//
         $(document).ready(submit);
         
     });

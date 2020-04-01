@@ -391,7 +391,16 @@ class Cliente extends model
 	public function setEnderecoCliente($Parametros, $id_company, $id_endereco = false)
 	{
 
-		if ($id_endereco == false && !empty($Parametros['cep'])) {
+		if ($id_endereco == false) {
+
+
+			$cep = isset($Parametros['cep']) ? ($Parametros['cep'])  : '';
+			$rua = isset($Parametros['rua']) ? ($Parametros['rua'])  : '';
+			$bairro = isset($Parametros['bairro']) ? ($Parametros['bairro'])  : '';
+			$cidade = isset($Parametros['cidade']) ? ($Parametros['cidade'])  : '';
+			$numero = isset($Parametros['numero']) ? ($Parametros['numero'])  : '';
+			$estado = isset($Parametros['estado']) ? ($Parametros['estado'])  : '';
+			$complemento = isset($Parametros['complemento']) ? ($Parametros['complemento'])  : '';
 
 			$sql = $this->db->prepare("INSERT INTO client_endereco SET 
 				
@@ -404,14 +413,13 @@ class Cliente extends model
 				complemento = :complemento
 			
 			");
-			$sql->bindValue(":cep", $Parametros['cep']);
-			$sql->bindValue(":rua", $Parametros['rua']);
-			$sql->bindValue(":bairro", $Parametros['bairro']);
-			$sql->bindValue(":cidade", $Parametros['cidade']);
-			$sql->bindValue(":numero", $Parametros['numero']);
-			$sql->bindValue(":estado", $Parametros['estado']);
-
-			$sql->bindValue(":complemento", $Parametros['complemento']);
+			$sql->bindValue(":cep",    $cep    );
+			$sql->bindValue(":rua",    $rua    );
+			$sql->bindValue(":bairro", $bairro );
+			$sql->bindValue(":cidade", $cidade );
+			$sql->bindValue(":numero", $numero );
+			$sql->bindValue(":estado", $estado );
+			$sql->bindValue(":complemento", $complemento);
 
 			$sql->execute();
 
@@ -431,13 +439,13 @@ class Cliente extends model
 				WHERE id_endereco = :id_endereco
 			
 			");
-			$sql->bindValue(":cep", $Parametros['cep']);
-			$sql->bindValue(":rua", $Parametros['rua']);
-			$sql->bindValue(":bairro", $Parametros['bairro']);
-			$sql->bindValue(":cidade", $Parametros['cidade']);
-			$sql->bindValue(":numero", $Parametros['numero']);
-			$sql->bindValue(":complemento", $Parametros['complemento']);
-			$sql->bindValue(":estado", $Parametros['estado']);
+			$sql->bindValue(":cep",    $cep);
+			$sql->bindValue(":rua",    $rua);
+			$sql->bindValue(":bairro", $bairro);
+			$sql->bindValue(":cidade", $cidade);
+			$sql->bindValue(":numero", $numero);
+			$sql->bindValue(":estado", $estado);
+			$sql->bindValue(":complemento", $complemento);
 			$sql->bindValue(":id_endereco", $id_endereco);
 
 			$sql->execute()
