@@ -54,6 +54,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 											</a>
 										</li>
 
+
 										<li class="list-group-item">
 											<b>Consultoria</b>
 											<a class="float-right">
@@ -63,10 +64,24 @@ if ($tableInfo['cli_aniversario'] != '') {
 												</div>
 											</a>
 										</li>
+										<?php if ($tableInfo['cli_tipo'] == 'Consultoria Completa') : ?>
+											<li class="list-group-item">
+												<b>Dossiê Consultoria</b>
+
+												<label class="popver" data-content="se checkado, está entregue" style="margin-left: 17px;    float: right;" data-target="webuiPopover0">
+													<input type="checkbox" class="checkbox_desgn" name="status_dossie_consultoria" <?= isset($tableInfo['status_dossie_consultoria']) && $tableInfo['status_dossie_consultoria'] == 1 ? 'checked' : ''; ?> id="dossie" value="1">
+													<span>
+														<span class="icon unchecked" style="top:-8px">
+															<span class="mdi mdi-check"></span>
+														</span>
+													</span>
+												</label>
+											</li>
+										<?php endif; ?>
 
 										<li class="list-group-item">
-											<b>Tipo</b>
-											<a class="float-right">
+											<b>Serviço</b>
+											<a class="text-center">
 												<select class="form-control select2" id="typeClient" name="typeClient" data-placeholder="Selecione">
 													<option <?= $tableInfo['cli_tipo'] == '' ? 'selected' : ''; ?> value="Definir">Definir</option>
 													<option <?= $tableInfo['cli_tipo'] == 'Consultoria Completa' ? 'selected' : ''; ?> value="Consultoria Completa">Consultoria Completa</option>
@@ -76,6 +91,8 @@ if ($tableInfo['cli_aniversario'] != '') {
 												</select>
 											</a>
 										</li>
+
+
 
 									</ul>
 

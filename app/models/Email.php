@@ -309,14 +309,14 @@ class Email extends model
 
         //Recipients
         $mail->setFrom('oi@stephanivarella.com', 'AdminStyle');
-        $mail->addAddress('oi@stephanivarella.com', 'Sistema');
+        //$mail->addAddress('oi@stephanivarella.com', 'Sistema');
         #$mail->addAddress('oi@stephanivarella.com', $Parametros['nome']);     
 
         // Content
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = 'Lembrete';
         $mail->Body    = ' Lembrete para criar o dossiê da cliente "' . $nomeCliente . '" Até "' . $data . '"';
-        $mail->send();
+        //$mail->send();
       } catch (Exception $e) {
         error_log(print_r("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 1));
       }

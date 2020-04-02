@@ -215,7 +215,7 @@ class Cliente extends model
 
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
-
+error_log(print_r($Parametros,1));
 		$Parametros['silhueta']   = isset($Parametros['silhueta']) ? $Parametros['silhueta'] : false;
 
 		$id_cliente = $Parametros['id_client'];
@@ -241,7 +241,10 @@ class Cliente extends model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
 
-		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : '0';
+		$typeClient 	 = isset($Parametros['typeClient']) && $Parametros['typeClient'] ? $Parametros['typeClient'] : '';
+
+		$customStatusDossieConsultoria 	 = isset($Parametros['status_dossie_consultoria']) ? '1' : '0';
+
 
 		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
@@ -253,7 +256,7 @@ class Cliente extends model
 				cli_aniversario = :cli_aniversario,
 				cli_telefone 	= :cli_telefone,
 				cli_telefone_celular 	= :cli_telefone_celular,
-
+				status_dossie_consultoria = :status_dossie_consultoria,
 				cli_tipo 	= :typeClient,
 
 
@@ -281,6 +284,9 @@ class Cliente extends model
 			$sql->bindValue(":params", $params);
 			$sql->bindValue(":id_client", $id_cliente);
 			$sql->bindValue(":id_user", $id_user);
+			$sql->bindValue(":status_dossie_consultoria", $customStatusDossieConsultoria);
+
+
 
 			if ($sql->execute()) {
 
@@ -905,6 +911,8 @@ class Cliente extends model
 	public function editColoracaoByClient($id_cliente, $id_company, $Parametros)
 	{
 
+		$status = isset($Parametros['dossie_status']) && $Parametros['dossie_status'] == 1 ? '1' : '0';
+		
 		$id_coloracao = isset($Parametros['id_coloracao']) ? $Parametros['id_coloracao'] : '';
 
 		if (isset($id_coloracao) && !empty($id_coloracao)) {
@@ -915,7 +923,8 @@ class Cliente extends model
 				id_cartela = :id_cartela, 
 				col_temperatura = :col_temperatura,
 				col_intensidade = :col_intensidade,
-				col_profundidade = :col_profundidade
+				col_profundidade = :col_profundidade,
+				dossie_status = :dossie_status
 
 				WHERE id_coloracao = :id_coloracao
 		
@@ -926,6 +935,8 @@ class Cliente extends model
 			$sql->bindValue(":col_temperatura", $Parametros['Temperatura']);
 			$sql->bindValue(":col_intensidade", $Parametros['Intensidade']);
 			$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
+			$sql->bindValue(":dossie_status", $status);
+
 
 			$sql->bindValue(":id_coloracao", $id_coloracao);
 
