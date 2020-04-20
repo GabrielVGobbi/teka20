@@ -47,13 +47,26 @@ class ClientesController extends controller
 
         if ($this->user->hasPermission('clientes_view')) {
 
-            $this->cliente->maxPerPage(20);
+            $this->dataInfo['p'] = 1;
+            if (isset($_GET['data']['p']) && !empty($_GET['data']['p'])) {
+                $this->dataInfo['p'] = intval($_GET['data']['p']);
+                if ($this->dataInfo['p'] == 0) {
+                    $this->dataInfo['p'] = 1;
+                }
+            }
 
-            $this->dataInfo['tableDados'] = $this->cliente->paginate(' WHERE id_company =' . $this->user->getCompany());
+            $offset = (10 * ($this->dataInfo['p'] - 1));
+
+            $filtro = isset($_GET['filtros']) ? $_GET['filtros'] : '';
+
+            $this->dataInfo['tableDados']  = $this->cliente->getAll($offset, $filtro, $this->user->getCompany());
+            $this->dataInfo['getCount']    = $this->cliente->row;
+            $this->dataInfo['p_count']     = ceil($this->dataInfo['getCount'] / 10);
 
             #$this->email->notifyEmailClient(84, $this->user->getCompany());
 
             $this->loadView($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+
         } else {
 
             $this->loadViewErrorNotPermission();

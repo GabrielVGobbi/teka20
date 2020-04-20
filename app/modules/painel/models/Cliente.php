@@ -3,9 +3,7 @@
 class Cliente extends model
 {
 
-	var $table = 'client';
-
-	use Pagination;
+	public $row = 0;
 
 	public function __construct()
 	{
@@ -15,6 +13,94 @@ class Cliente extends model
 
 		$this->email = new Email();
 	}
+
+	public function getAll($offset, $filtro, $id_company = 0)
+	{
+		error_log(print_r($filtro,1));
+
+		$where = $this->buildWhere($filtro, $id_company);
+
+		$sql = "SELECT * FROM client cli WHERE " . implode(' AND ', $where) . " LIMIT $offset, 10";
+
+		$sql = $this->db->prepare($sql);
+
+		$this->bindWhere($filtro, $sql);
+
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$this->retorno = $sql->fetchAll();
+			$this->row = $sql->rowCount();
+		}
+
+		return $this->retorno;
+	}
+
+	private function buildWhere($filtro)
+	{
+		$where = array(
+			'1=1'
+		);
+
+		if (isset($filtro['cli_nome']) && !empty($filtro['cli_nome'])) {
+
+			$where[] = "(cli.cli_nome LIKE :cli_nome)";
+		}
+
+		if (isset($filtro['cli_tipo']) && !empty($filtro['cli_tipo'])) {
+
+			$where[] = "(cli.cli_tipo LIKE :cli_tipo)";
+		}
+
+		if (isset($filtro['cli_aniversario']) && !empty($filtro['cli_aniversario'])) {
+
+			$where[] = "(cli.cli_aniversario LIKE :cli_aniversario)";
+		}
+
+		if (isset($filtro['pendencia']) && !empty($filtro['pendencia'])) {
+
+			$where[] = "(cli.status_dossie_consultoria = :pendencia) OR (cli.status_dossie_consultoria = :pendencia)";
+		}
+
+		if (isset($filtro['abc']) && !empty($filtro['abc'])) {
+
+			$where[] = "(cli.cli_nome LIKE :abc) ";
+		}
+		return $where;
+	}
+
+	private function bindWhere($filtro, &$sql)
+	{
+
+		if (!empty($filtro['cli_nome'])) {
+			if ($filtro['cli_nome'] != '') {
+				$sql->bindValue(":cli_nome", '%' . $filtro['cli_nome'] . '%');
+			}
+		}
+		if (!empty($filtro['pendencia'])) {
+			if ($filtro['pendencia'] != '') {
+				$sql->bindValue(":pendencia", '0');
+			}
+		}
+		if (!empty($filtro['cli_tipo'])) {
+			if ($filtro['cli_tipo'] != '') {
+				$sql->bindValue(":cli_tipo", '%' . $filtro['cli_tipo'] . '%');
+			}
+		}
+
+		if (!empty($filtro['cli_aniversario'])) {
+			if ($filtro['cli_aniversario'] != '') {
+				$sql->bindValue(":cli_aniversario", '%' . $filtro['cli_aniversario'] . '%');
+			}
+		}
+
+		if (!empty($filtro['abc'])) {
+			if ($filtro['abc'] != '') {
+				$sql->bindValue(":abc", $filtro['abc'] . '%');
+			}
+		}
+	}
+
 
 	public function getCount($id_company)
 	{
@@ -130,6 +216,10 @@ class Cliente extends model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 		$cli_telefone_celular 	 = isset($Parametros['cli_telefone_celular']) ? ($Parametros['cli_telefone_celular'])  : '';
 
+		$cli_facebook 	 = isset($Parametros['cli_facebook']) ? controller::ReturnValor($Parametros['cli_facebook'])  : '';
+		$cli_pinterest 	 = isset($Parametros['cli_pinterest']) ? controller::ReturnValor($Parametros['cli_pinterest'])  : '';
+		$cli_instagram 	 = isset($Parametros['cli_instagram']) ? controller::ReturnValor($Parametros['cli_instagram'])  : '';
+
 		$typeClient 	 = isset($Parametros['typeClient']) ? ($Parametros['typeClient'])  : 'Possivel Cliente';
 
 
@@ -151,6 +241,11 @@ class Cliente extends model
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
 				id_silhueta = :id_silhueta,
+
+				cli_facebook = :cli_facebook,
+				cli_instagram = :cli_instagram,
+				cli_pinterest = :cli_pinterest,
+
 				
 				created_at		= NOW(),
 				id_company 		= :id_company
@@ -169,6 +264,11 @@ class Cliente extends model
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
 			$sql->bindValue(":id_silhueta", $id_silhueta);
+
+			$sql->bindValue(":cli_facebook", $cli_facebook);
+			$sql->bindValue(":cli_instagram", $cli_instagram);
+			$sql->bindValue(":cli_pinterest", $cli_pinterest);
+
 
 
 			$sql->bindValue(":params", $params);
@@ -215,7 +315,6 @@ class Cliente extends model
 
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
-error_log(print_r($Parametros,1));
 		$Parametros['silhueta']   = isset($Parametros['silhueta']) ? $Parametros['silhueta'] : false;
 
 		$id_cliente = $Parametros['id_client'];
@@ -235,6 +334,11 @@ error_log(print_r($Parametros,1));
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
 		$cli_profissao 	 = isset($Parametros['cli_profissao']) ? controller::ReturnValor($Parametros['cli_profissao'])  : '';
+
+		$cli_facebook 	 = isset($Parametros['cli_facebook']) ? controller::ReturnValor($Parametros['cli_facebook'])  : '';
+		$cli_pinterest 	 = isset($Parametros['cli_pinterest']) ? controller::ReturnValor($Parametros['cli_pinterest'])  : '';
+		$cli_instagram 	 = isset($Parametros['cli_instagram']) ? controller::ReturnValor($Parametros['cli_instagram'])  : '';
+
 
 		$cli_aniversario = isset($Parametros['cli_aniversario']) ? ($Parametros['cli_aniversario'])  : '';
 		$cli_email 		 = isset($Parametros['cli_email']) ? (mb_strtolower($Parametros['cli_email'], "UTF-8"))  : '';
@@ -259,11 +363,14 @@ error_log(print_r($Parametros,1));
 				status_dossie_consultoria = :status_dossie_consultoria,
 				cli_tipo 	= :typeClient,
 
-
 				cli_profissao 	= :cli_profissao,
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
+
+				cli_facebook = :cli_facebook,
+				cli_instagram = :cli_instagram,
+				cli_pinterest = :cli_pinterest,
 				
 				edited_at		= NOW(),
 				edited_by		= :id_user
@@ -285,6 +392,10 @@ error_log(print_r($Parametros,1));
 			$sql->bindValue(":id_client", $id_cliente);
 			$sql->bindValue(":id_user", $id_user);
 			$sql->bindValue(":status_dossie_consultoria", $customStatusDossieConsultoria);
+
+			$sql->bindValue(":cli_facebook", $cli_facebook);
+			$sql->bindValue(":cli_instagram", $cli_instagram);
+			$sql->bindValue(":cli_pinterest", $cli_pinterest);
 
 
 
@@ -588,7 +699,6 @@ error_log(print_r($Parametros,1));
 
 	public function AddPhotoCartela($id_cartela, $photo, $id_company)
 	{
-		error_log(print_r($photo, 1));
 		if (isset($photo)) {
 
 			$tipo = $photo['fotos']['type'];
@@ -681,7 +791,7 @@ error_log(print_r($Parametros,1));
 
 				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname, 80);
 
-				$this->saveImage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image);
+				$this->saclimage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image);
 			}
 		} else {
 
@@ -691,7 +801,7 @@ error_log(print_r($Parametros,1));
 		return $id_cliente;
 	}
 
-	public function saveImage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image)
+	public function saclimage($pasta, $tmpname, $div, $id_cliente, $id_company, $id_image)
 	{
 
 		if ($id_image == 0) {
@@ -912,7 +1022,7 @@ error_log(print_r($Parametros,1));
 	{
 
 		$status = isset($Parametros['dossie_status']) && $Parametros['dossie_status'] == 1 ? '1' : '0';
-		
+
 		$id_coloracao = isset($Parametros['id_coloracao']) ? $Parametros['id_coloracao'] : '';
 
 		if (isset($id_coloracao) && !empty($id_coloracao)) {

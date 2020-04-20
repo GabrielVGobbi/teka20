@@ -91,11 +91,7 @@ if ($tableInfo['cli_aniversario'] != '') {
 												</select>
 											</a>
 										</li>
-
-
-
 									</ul>
-
 								</div>
 
 								<div class="card card">
@@ -274,6 +270,45 @@ if ($tableInfo['cli_aniversario'] != '') {
 														</div>
 													</div>
 												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12">
+											<div class="callout callout-info">
+												<h5><i class="fab fa-google-plus-g"></i> Rede Social</h5><br>
+
+												<div class="row">
+													<div class="col-md-4">
+														<label for="">Facebook</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+
+															</div>
+															<input type="text" class="form-control" name="cli_facebook" id="cli_facebook" value="<?= $tableInfo['cli_facebook']; ?>"> 
+														</div>
+													</div>
+													<div class="col-md-4">
+														<label for="">Pinterest</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+
+															</div>
+															<input type="text" class="form-control" name="cli_pinterest" id="cli_pinterest" value="<?= $tableInfo['cli_pinterest']; ?>" >
+														</div>
+													</div>
+													<div class="col-md-4">
+														<label for="">Instagram</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+
+															</div>
+															<input type="text" class="form-control" name="cli_instagram" id="cli_instagram" value="<?= $tableInfo['cli_instagram']; ?>" >
+														</div>
+													</div>
+												</div>
+
 											</div>
 										</div>
 									</div>
